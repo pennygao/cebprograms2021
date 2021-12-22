@@ -90,8 +90,9 @@
     public void setPowerFactor(double factor){
         this.powerFactor=factor;
     }
-    public double MMtoticks(double distance){
 
+    public double MMtoticks(double distance){
+        return 0.0;
     }
     public void driveForDistance(int leftFrontDistance, int rightFrontDistance, int leftBackDistance, int rightBackDistance, double power){
         for (int i = 0; i<4 ; i++){

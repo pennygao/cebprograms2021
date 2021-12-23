@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 
 
-public class Slide implements Subsystem {
+public class Outtake implements Subsystem {
     //Hardware: 1 motor, 1 encoder
     private DcMotorEx slideMotor;
     private double slidePower= 0;
@@ -19,6 +20,8 @@ public class Slide implements Subsystem {
     private static final double INCHES_PER_LEVEL = 3.5;
     private int targetPosition = 0;
     private Telemetry telemetry;
+    private Servo dumpServo;
+    private double servoPosition = 0;
 
 
     public enum slide_state {
@@ -27,8 +30,9 @@ public class Slide implements Subsystem {
         LEVEL_2,
     }
 
-    public Slide(Robot robot, Telemetry telemetry) {
+    public Outtake(Robot robot, Telemetry telemetry) {
         this.telemetry = telemetry;
+        dumpServo = robot.getServo("dumpServo");
         slideMotor = robot.getMotor("slide");
         //slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -36,6 +40,15 @@ public class Slide implements Subsystem {
         slidePower = 1;
         targetPosition = 0;
 
+    }
+
+    public double getDumpPosition() {
+        return dumpServo.getPosition();
+    }
+
+    public void setServoPosition(double position) {
+        this.servoPosition = position;
+        // set encode to new position
     }
 
     public void setPower (double power ){
@@ -91,6 +104,7 @@ public class Slide implements Subsystem {
             slidePower = 0;
         }
          */
+        dumpServo.setPosition(servoPosition);
         if (slidePower != 0) {
             slideMotor.setPower(slidePower);
             slideMotor.setTargetPosition(targetPosition);

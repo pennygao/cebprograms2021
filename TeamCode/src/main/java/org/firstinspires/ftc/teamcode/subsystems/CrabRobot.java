@@ -6,19 +6,19 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 
 public class CrabRobot extends Robot {
     public final SimpleMecanumDrive mecanumDrive;
-    public final Slide slide;
+    public final Outtake outtake;
     public final duckSpinner spinner;
-    public final dumpServo dumper;
+    public final Intake intake;
     public CrabRobot(LinearOpMode opMode) {
         super(opMode);
         mecanumDrive = new SimpleMecanumDrive(this);
         registerSubsystem(mecanumDrive);
-        slide = new Slide(this, opMode.telemetry);
-        registerSubsystem(slide);
+        outtake = new Outtake(this, opMode.telemetry);
+        registerSubsystem(outtake);
         spinner = new duckSpinner(this);
         registerSubsystem(spinner);
-        dumper = new dumpServo(this);
-        registerSubsystem(dumper);
+        intake = new Intake(this);
+        registerSubsystem(intake);
 
 }
 }

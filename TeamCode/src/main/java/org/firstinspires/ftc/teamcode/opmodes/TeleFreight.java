@@ -4,27 +4,13 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.subsystems.SimpleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.Slide;
-import org.firstinspires.ftc.teamcode.subsystems.dumpServo;
-import org.firstinspires.ftc.teamcode.subsystems.duckSpinner;
+import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 @TeleOp
-public class    TeleFreightB extends LinearOpMode {
+public class   TeleFreight  extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Robot robot = new Robot(this);
-        SimpleMecanumDrive mecanumDrive = new SimpleMecanumDrive(robot);
-        dumpServo dumper = new dumpServo(robot);
-        Intake intake = new Intake(robot);
-        Slide mySlide = new Slide(robot, telemetry);
-        duckSpinner duckspinner = new duckSpinner(robot);
-        robot.registerSubsystem(intake);
-        robot.registerSubsystem(mySlide);
-        robot.registerSubsystem(duckspinner);
-        robot.registerSubsystem(mecanumDrive);
-        robot.registerSubsystem(dumper);
+        CrabRobot robot = new CrabRobot(this);
 
         int slidecountup = 0;
         int slidecountdown = 0;
@@ -34,8 +20,8 @@ public class    TeleFreightB extends LinearOpMode {
 
 
 //RESETS
-        intake.setTargetPosition(Intake.Positions.RESET);
-        dumper.setServoPosition(0.85);
+        robot.intake.setTargetPosition(Intake.Positions.RESET);
+        robot.outtake.setServoPosition(0.85);
 
         waitForStart();
 
@@ -52,8 +38,8 @@ public class    TeleFreightB extends LinearOpMode {
             float leftTrigger = gamepad1.left_trigger;
             float rightTrigger = gamepad1.right_trigger;
 
-            telemetry.addData("slide level init: ", mySlide.getLevel());
-            telemetry.addData("dumpServo Position:",dumper.getPosition());
+            telemetry.addData("slide level init: ", robot.outtake.getLevel());
+            telemetry.addData("dumpServo Position:",robot.outtake.getDumpPosition());
             telemetry.update();
 
             robot.update();
@@ -61,29 +47,29 @@ public class    TeleFreightB extends LinearOpMode {
             //check the bottom of the code (A) for the deleted bit i commented out
 
 //DRIVE
-            mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
+            robot.mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
 
             if (slowMode) {
-                mecanumDrive.setPowerFactor(0.2);
+                robot.mecanumDrive.setPowerFactor(0.2);
             }
             if (normieMode) {
-                mecanumDrive.setPowerFactor(0.8);
+                robot.mecanumDrive.setPowerFactor(0.8);
             }
 
 //INTAKE
             if(buttonX) {
-                intake.start();
+                robot.intake.start();
                 telemetry.addLine("in buttonX loop");
             }
 
             if(buttonY){
                 if (!inTransfer) {
-                    intake.stop();
+                    robot.intake.stop();
                     inTransfer=true;
                     telemetry.addLine("enter transfer");
                 }
                 else {
-                    intake.reset();
+                    robot.intake.reset();
                     inTransfer = false;
                     telemetry.addLine("transfer done");
                 }
@@ -93,22 +79,22 @@ public class    TeleFreightB extends LinearOpMode {
 //RAISE SLIDE
             if(buttonA) {
                 if (!isApressed) {
-                    mySlide.goUp();
+                    robot.outtake.goUp();
                     isApressed = true;
-                    telemetry.addData("going up. level: ", mySlide.getLevel());
+                    telemetry.addData("going up. level: ", robot.outtake.getLevel());
                 }
             } else {
                 isApressed = false;
             }
 
             if(buttonB) {
-                mySlide.goalldown();
+                robot.outtake.goalldown();
                 telemetry.addLine("going all down");
             }
 
 //DUMP
             if(leftBumper) {
-                int level = mySlide.getLevel();
+                int level = robot.outtake.getLevel();
                 double servoPosition=0.85;
                 switch (level){
                     case 1: servoPosition=0.47;
@@ -118,22 +104,22 @@ public class    TeleFreightB extends LinearOpMode {
                     case 3: servoPosition= 0.48;
                     break;
                 }
-                dumper.setServoPosition(servoPosition);
+                robot.outtake.setServoPosition(servoPosition);
                 telemetry.addLine("dumping  ");
             }
 
             if (rightBumper) {
-                dumper.setServoPosition(0.85);
+                robot.outtake.setServoPosition(0.85);
                 telemetry.addLine("resetting dumper");
             }
 
 
 //DUCK SPINNER
             if (leftTrigger > 0 ) {
-                duckspinner.setPower(3);
+                robot.spinner.setPower(3);
             }
             if (rightTrigger > 0) {
-                duckspinner.setPower(0);
+                robot.spinner.setPower(0);
             }
             telemetry.update();
         }

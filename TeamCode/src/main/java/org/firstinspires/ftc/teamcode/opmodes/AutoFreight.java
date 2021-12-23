@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.commands.Spin;
 
 @Autonomous
-public class carolineBullyMe extends LinearOpMode {
+public class AutoFreight extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this);

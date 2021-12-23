@@ -25,21 +25,21 @@ public class    TeleFreightB extends LinearOpMode {
         robot.registerSubsystem(duckspinner);
         robot.registerSubsystem(mecanumDrive);
         robot.registerSubsystem(dumper);
+
         int slidecountup = 0;
         int slidecountdown = 0;
         boolean isApressed = false;
-
         boolean inTransfer = false;
 
+
+
+//RESETS
         intake.setTargetPosition(Intake.Positions.RESET);
-        //dumper.setServoPosition(0.0);
+        dumper.setServoPosition(0.85);
 
         waitForStart();
 
         while (!isStopRequested()) {
-            telemetry.addData("slide level init: ", mySlide.getLevel());
-            telemetry.addData("dumpServo Position:",dumper.getPosition());
-            telemetry.update();
 
             boolean buttonA = gamepad2.a; //enter Align
             boolean buttonB = gamepad2.b; // exit Align
@@ -52,14 +52,98 @@ public class    TeleFreightB extends LinearOpMode {
             float leftTrigger = gamepad1.left_trigger;
             float rightTrigger = gamepad1.right_trigger;
 
+            telemetry.addData("slide level init: ", mySlide.getLevel());
+            telemetry.addData("dumpServo Position:",dumper.getPosition());
+            telemetry.update();
+
             robot.update();
 
+            //check the bottom of the code (A) for the deleted bit i commented out
+
+//DRIVE
+            mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
+
+            if (slowMode) {
+                mecanumDrive.setPowerFactor(0.2);
+            }
+            if (normieMode) {
+                mecanumDrive.setPowerFactor(0.8);
+            }
+
+//INTAKE
+            if(buttonX) {
+                intake.start();
+                telemetry.addLine("in buttonX loop");
+            }
+
+            if(buttonY){
+                if (!inTransfer) {
+                    intake.stop();
+                    inTransfer=true;
+                    telemetry.addLine("enter transfer");
+                }
+                else {
+                    intake.reset();
+                    inTransfer = false;
+                    telemetry.addLine("transfer done");
+                }
+            }
+
+
+//RAISE SLIDE
+            if(buttonA) {
+                if (!isApressed) {
+                    mySlide.goUp();
+                    isApressed = true;
+                    telemetry.addData("going up. level: ", mySlide.getLevel());
+                }
+            } else {
+                isApressed = false;
+            }
+
+            if(buttonB) {
+                mySlide.goalldown();
+                telemetry.addLine("going all down");
+            }
+
+//DUMP
+            if(leftBumper) {
+                int level = mySlide.getLevel();
+                double servoPosition=0.85;
+                switch (level){
+                    case 1: servoPosition=0.47;
+                    break;
+                    case 2: servoPosition= 0.45;
+                    break;
+                    case 3: servoPosition= 0.48;
+                    break;
+                }
+                dumper.setServoPosition(servoPosition);
+                telemetry.addLine("dumping  ");
+            }
+
+            if (rightBumper) {
+                dumper.setServoPosition(0.85);
+                telemetry.addLine("resetting dumper");
+            }
+
+
+//DUCK SPINNER
+            if (leftTrigger > 0 ) {
+                duckspinner.setPower(3);
+            }
+            if (rightTrigger > 0) {
+                duckspinner.setPower(0);
+            }
+            telemetry.update();
+        }
+    }
+}
 
 
 
-
-
-            // Telemetry print out distL, distR
+// A
+// Telemetry print out distL, distR
             /*
             telemetry.addData("distL:", mecanumDrive.getdistL());
             telemetry.addData("distR:", mecanumDrive.getdistR());
@@ -78,81 +162,4 @@ public class    TeleFreightB extends LinearOpMode {
                 telemetry.addLine("in button A loop");
             } else {
             */
-            //    mecanumDrive.setInAlignMode(false);
-                mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
-
-
-
-            if(buttonX) {
-                intake.start();
-                telemetry.addLine("in buttonX loop");
-            }
-
-
-            if(buttonY){
-                if (!inTransfer) {
-                    intake.stop();
-                    inTransfer=true;
-                    telemetry.addLine("enter transfer");
-                }
-                else {
-                    intake.reset();
-                    inTransfer = false;
-                    telemetry.addLine("transfer done");
-                }
-
-            }
-            if(buttonA) {
-                if (!isApressed) {
-                    mySlide.goUp();
-                    isApressed = true;
-                    telemetry.addData("going up. level: ", mySlide.getLevel());
-
-                }
-
-            } else {
-                isApressed = false;
-            }
-            if(buttonB) {
-                mySlide.goalldown();
-                telemetry.addLine("going all down");
-            }
-            if(leftBumper) {
-                int level = mySlide.getLevel();
-                double servoPosition=0.85;
-                switch (level){
-                    case 1: servoPosition=0.3;
-                    break;
-                    case 2: servoPosition= 0.45;
-                    break;
-                    case 3: servoPosition= 0.48;
-                    break;
-
-                }
-                dumper.setServoPosition(servoPosition);
-                telemetry.addLine("dumping  ");
-            }
-            if (rightBumper) {
-                dumper.setServoPosition(0.85);
-                telemetry.addLine("resetting dumper");
-            }
-            if (slowMode) {
-                mecanumDrive.setPowerFactor(0.2);
-            }
-            if (normieMode) {
-                mecanumDrive.setPowerFactor(0.8);
-            }
-            if (leftTrigger > 0 ) {
-                duckspinner.setPower(3);
-            }
-            if (rightTrigger > 0) {
-                duckspinner.setPower(0);
-            }
-
-
-            telemetry.update();
-
-        }
-
-    }
-}
+//    mecanumDrive.setInAlignMode(false);

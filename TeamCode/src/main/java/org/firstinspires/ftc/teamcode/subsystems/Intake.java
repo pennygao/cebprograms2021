@@ -67,7 +67,7 @@ public class Intake implements Subsystem {
                 setTargetAngle(0 * Math.PI / 180);
                 break;
             case INTAKE:
-                setTargetAngle(-82 * Math.PI / 180);
+                setTargetAngle(-87 * Math.PI / 180);
                 break;
             case DUMP:
                 setTargetAngle(-10 * Math.PI / 180);//10

@@ -33,7 +33,7 @@ public class Slide implements Subsystem {
         //slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slidePower = 0.2;
+        slidePower = 1;
         targetPosition = 0;
 
     }
@@ -43,19 +43,17 @@ public class Slide implements Subsystem {
     }
 
     public  int inchToTicks ( double inches) {
-
         return (int) (inches * TICKS_PER_REV / (PULLEY_DIAMETER * Math.PI));
     }
+
     public int getLevel() {
         return level;
     }
 
     public void goUp () {
-
         if (level < 3 && !slideMotor.isBusy()) {
-            slidePower = 0.2;
             level = level + 1;
-            switch(level){
+            switch (level) {
                 case 0:
                     targetPosition = inchToTicks(0);
                     break;
@@ -70,28 +68,20 @@ public class Slide implements Subsystem {
             }
             //targetPosition = inchToTicks (INCHES_PER_LEVEL * level);
             telemetry.addData("Slide leve", level);
-
         }
-
     }
 
     public void goDown() {
-
         if (level > 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
             level = level - 1;
             targetPosition = inchToTicks(INCHES_PER_LEVEL * level);
-            slidePower = 0.2;
-
-
         }
     }
+
     public void goalldown() {
         if (level > 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
             level = 0;
             targetPosition = 0;//inchToTicks(INCHES_PER_LEVEL * level);
-            slidePower = 0.2;
-
-
         }
     }
 
@@ -106,7 +96,6 @@ public class Slide implements Subsystem {
             slideMotor.setTargetPosition(targetPosition);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-
         // debug only,  remove it on release
         // packet.put("Current Position", slideMotor.getCurrentPosition());
        //  packet.put("target position", slideMotor.getTargetPosition());

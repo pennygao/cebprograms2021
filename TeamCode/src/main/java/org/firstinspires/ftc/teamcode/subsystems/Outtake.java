@@ -34,7 +34,6 @@ public class Outtake implements Subsystem {
         this.telemetry = telemetry;
         dumpServo = robot.getServo("dumpServo");
         slideMotor = robot.getMotor("slide");
-        //slideMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidePower = 1;

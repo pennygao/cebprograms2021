@@ -21,13 +21,13 @@ public class   TeleFreight  extends LinearOpMode {
 
 //RESETS
         robot.intake.setTargetPosition(Intake.Positions.RESET);
-        robot.outtake.setServoPosition(0.85);
+        robot.outtake.setServoPosition(0.6);
 
         waitForStart();
 
         while (!isStopRequested()) {
 
-            boolean buttonA = gamepad2.a; //enter Align
+            boolean buttonA = gamepad2.a; // enter Align
             boolean buttonB = gamepad2.b; // exit Align
             boolean buttonX = gamepad2.x;
             boolean buttonY = gamepad2.y;
@@ -95,13 +95,13 @@ public class   TeleFreight  extends LinearOpMode {
 //DUMP
             if(leftBumper) {
                 int level = robot.outtake.getLevel();
-                double servoPosition=0.85;
+                double servoPosition=0.6;
                 switch (level){
-                    case 1: servoPosition=0.47;
+                    case 1: servoPosition=0.25; //0.47 before fine-tune; hits the outer part of the tray
                     break;
-                    case 2: servoPosition= 0.45;
+                    case 2: servoPosition= 0.25;
                     break;
-                    case 3: servoPosition= 0.48;
+                    case 3: servoPosition= 0.25;
                     break;
                 }
                 robot.outtake.setServoPosition(servoPosition);
@@ -109,14 +109,14 @@ public class   TeleFreight  extends LinearOpMode {
             }
 
             if (rightBumper) {
-                robot.outtake.setServoPosition(0.85);
+                robot.outtake.setServoPosition(0.6);
                 telemetry.addLine("resetting dumper");
             }
 
 
 //DUCK SPINNER
             if (leftTrigger > 0 ) {
-                robot.spinner.setPower(3);
+                robot.spinner.setPower(0.8);
             }
             if (rightTrigger > 0) {
                 robot.spinner.setPower(0);

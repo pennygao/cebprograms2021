@@ -72,6 +72,11 @@ public class Outtake implements Subsystem {
     3: servo undump
     4: go down
     */
+    public void nextDefault() {
+        if (defaultLevel==3){ defaultLevel=1; }
+        else { defaultLevel++; }
+    }
+
     public void dump() {
         if (dumpState == 0){ //go up
             switch (defaultLevel) {
@@ -87,29 +92,6 @@ public class Outtake implements Subsystem {
             dumpState++;
         }
     }
-/*
-    public void goUp () {
-        if (level < 3 && !slideMotor.isBusy()) {
-            level = level + 1;
-            switch (level) {
-                case 0:
-                    targetPosition = inchToTicks(0);
-                    break;
-                case 1:
-                    targetPosition = inchToTicks(3.0);
-                    break;
-                case 2:
-                    targetPosition = inchToTicks(7.0);
-                    break;
-                case 3:
-                    targetPosition = inchToTicks(11.0);
-            }
-            //targetPosition = inchToTicks (INCHES_PER_LEVEL * level);
-            telemetry.addData("Slide leve", level);
-        }
-    }
-
- */
 
     public void goDown() {
         if (level > 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
@@ -118,7 +100,7 @@ public class Outtake implements Subsystem {
         }
     }
 
-    public void goalldown() {
+    public void goAllDown() {
         if (level > 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
             level = 0;
             targetPosition = 0;//inchToTicks(INCHES_PER_LEVEL * level);

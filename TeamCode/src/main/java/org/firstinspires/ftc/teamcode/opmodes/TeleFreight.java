@@ -33,28 +33,26 @@ public class   TeleFreight  extends LinearOpMode {
 //ENTER OP MODE LOOP
         while (!isStopRequested()) {
 
-            boolean buttonA = gamepad2.a; // enter Align
-            boolean buttonB = gamepad2.b; // exit Align
+            boolean buttonA = gamepad2.a;
             boolean buttonX = gamepad2.x;
             boolean buttonY = gamepad2.y;
             boolean leftBumper = gamepad2.left_bumper;
             boolean rightBumper = gamepad2.right_bumper;
 
+            robot.update();
 
-            if (robot.userInput.buttonPressed(1, "a")) {
-                slowMode = !slowMode;
-            }
 
             telemetry.addData("dumpServo Position:",robot.outtake.getDumpPosition());
-            telemetry.update();
 
-            robot.update();
+
 
             //check the bottom of the code (A) for the deleted bit i commented out
 
 //DRIVE MODES
+            if (robot.userInput.buttonPressed(1, "a")) {
+                slowMode = !slowMode;
+            }
             robot.mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
-
             if (slowMode) {
                 robot.mecanumDrive.setPowerFactor(0.2);
 //                telemetry.addLine("slow mode");
@@ -86,7 +84,11 @@ public class   TeleFreight  extends LinearOpMode {
             }
 
 //SET SLIDE LEVEL
-
+            if (robot.userInput.buttonPressed(2, "b")) {
+                robot.outtake.nextDefault();
+            }
+            Log.i("slide default", ""+robot.outtake.defaultLevel);
+            telemetry.addData("slide default level", robot.outtake.defaultLevel );
 
 //RAISE SLIDE
             if(buttonA) {
@@ -97,11 +99,6 @@ public class   TeleFreight  extends LinearOpMode {
             } else {
                 isApressed = false;
             }
-            /*if(buttonB) {
-                robot.outtake.goalldown();
-                telemetry.addLine("going all down");
-            }
-            */
 
 //DUMP
             if(leftBumper) {

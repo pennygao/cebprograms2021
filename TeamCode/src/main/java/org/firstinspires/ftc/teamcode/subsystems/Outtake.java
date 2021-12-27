@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 
+import android.util.Log;
 
 public class Outtake implements Subsystem {
     //Hardware: 1 motor, 1 encoder
@@ -16,13 +18,15 @@ public class Outtake implements Subsystem {
     public static final double  TICKS_PER_REV = 537.7;
     public static final double PULLEY_DIAMETER = 38 /25.4;
     public int level = 0;
+    public int defaultLevel = 3;
     public static double SLIDE_LENGTH = 15.0;
     private static final double INCHES_PER_LEVEL = 3.5;
     private int targetPosition = 0;
     private Telemetry telemetry;
     private Servo dumpServo;
     private double servoPosition = 0;
-
+    private int dumpState = 0;
+    private double servoTime;
 
     public enum slide_state {
         LEVEL_0,
@@ -61,7 +65,29 @@ public class Outtake implements Subsystem {
     public int getLevel() {
         return level;
     }
-
+    /*
+    0: idle
+    1: slider go up
+    2: servo dump
+    3: servo undump
+    4: go down
+    */
+    public void dump() {
+        if (dumpState == 0){ //go up
+            switch (defaultLevel) {
+                case 1:
+                    targetPosition = inchToTicks(3.0);
+                    break;
+                case 2:
+                    targetPosition = inchToTicks(7.0);
+                    break;
+                case 3:
+                    targetPosition = inchToTicks(11.0);
+                }
+            dumpState++;
+        }
+    }
+/*
     public void goUp () {
         if (level < 3 && !slideMotor.isBusy()) {
             level = level + 1;
@@ -83,6 +109,8 @@ public class Outtake implements Subsystem {
         }
     }
 
+ */
+
     public void goDown() {
         if (level > 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
             level = level - 1;
@@ -99,16 +127,84 @@ public class Outtake implements Subsystem {
 
     @Override
     public void update(TelemetryPacket packet) {
+
+        switch (dumpState){
+            case 1: //moving slide up
+                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 0.5){
+                    Log.i("dumpState", "ending 1: "
+                            + slideMotor.getCurrentPosition() + " " + targetPosition);
+                    setServoPosition(0.25);
+                    dumpState++;
+                    servoTime = NanoClock.system().seconds();
+                    Log.i("servoTime", "1: " + servoTime
+                            + " " + NanoClock.system().seconds());
+                }
+                else if (slidePower != 0) {
+                    slideMotor.setPower(slidePower);
+                    slideMotor.setTargetPosition(targetPosition);
+                    slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    Log.i("dumpState", "on 1: ");
+                }
+                break;
+            case 2: //dumping servo
+                if (NanoClock.system().seconds() - servoTime >= 1){
+                    Log.i("dumpState", "ending 2 " +
+                            dumpServo.getPosition() + " " + servoPosition);
+                    setServoPosition(0.6);
+                    dumpState++;
+                    Log.i("servoTime", "servo 2:"+NanoClock.system().seconds());
+                    servoTime = NanoClock.system().seconds();
+                }
+                else {
+                    dumpServo.setPosition(servoPosition);
+                    Log.i("dumpState", "on 2: ");
+                }
+                break;
+            case 3:
+                if (NanoClock.system().seconds() - servoTime >= 1){
+                    Log.i("dumpState", "ending 3 " +
+                            dumpServo.getPosition() + " " + servoPosition);
+                    targetPosition = 0;
+                    dumpState++;
+                    Log.i("servoTime", "servo 3:"+NanoClock.system().seconds());
+                    servoTime = NanoClock.system().seconds();
+                }
+                else {
+                    dumpServo.setPosition(servoPosition);
+                }
+
+
+                Log.i("dumpState", "on 2: ");
+                break;
+            case 4:
+                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 0.5){ //what do i do here?
+                    Log.i("dumpState", "ending 4");
+                    dumpState=0;
+                }
+                else if (slidePower != 0) {
+                    slideMotor.setPower(slidePower);
+                    slideMotor.setTargetPosition(targetPosition);
+                    slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    Log.i("dumpState", "on 3");
+                }
+                break;
+        }
+
         /*if (level == 0 &&  !slideMotor.isBusy()) {
             slidePower = 0;
         }
-         */
+         //
         dumpServo.setPosition(servoPosition);
         if (slidePower != 0) {
             slideMotor.setPower(slidePower);
             slideMotor.setTargetPosition(targetPosition);
             slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+        */
+       //see if the current dumpState is done
+
+       //if  dumpState is done, do the next one.
+
         // debug only,  remove it on release
         // packet.put("Current Position", slideMotor.getCurrentPosition());
        //  packet.put("target position", slideMotor.getTargetPosition());

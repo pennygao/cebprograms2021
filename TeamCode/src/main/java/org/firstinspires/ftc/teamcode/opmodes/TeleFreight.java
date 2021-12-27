@@ -91,16 +91,17 @@ public class   TeleFreight  extends LinearOpMode {
 //RAISE SLIDE
             if(buttonA) {
                 if (!isApressed) {
-                    robot.outtake.goUp();
+                    robot.outtake.dump();
                     isApressed = true;
                 }
             } else {
                 isApressed = false;
             }
-            if(buttonB) {
+            /*if(buttonB) {
                 robot.outtake.goalldown();
                 telemetry.addLine("going all down");
             }
+            */
 
 //DUMP
             if(leftBumper) {

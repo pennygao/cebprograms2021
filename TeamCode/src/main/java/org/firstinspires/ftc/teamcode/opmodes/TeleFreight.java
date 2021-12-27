@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
+import org.firstinspires.ftc.teamcode.subsystems.UserInput;
+
+import android.util.Log;
 @TeleOp
 public class   TeleFreight  extends LinearOpMode {
     @Override
@@ -16,7 +19,8 @@ public class   TeleFreight  extends LinearOpMode {
         int slidecountdown = 0;
         boolean isApressed = false;
         boolean inTransfer = false;
-
+        boolean slowMode = false;
+        boolean toggleSpin = false;
 
 
 //RESETS
@@ -25,6 +29,8 @@ public class   TeleFreight  extends LinearOpMode {
 
         waitForStart();
 
+
+//ENTER OP MODE LOOP
         while (!isStopRequested()) {
 
             boolean buttonA = gamepad2.a; // enter Align
@@ -33,12 +39,12 @@ public class   TeleFreight  extends LinearOpMode {
             boolean buttonY = gamepad2.y;
             boolean leftBumper = gamepad2.left_bumper;
             boolean rightBumper = gamepad2.right_bumper;
-            boolean slowMode = gamepad1.a;
-            boolean normieMode = gamepad1.b;
-            float leftTrigger = gamepad1.left_trigger;
-            float rightTrigger = gamepad1.right_trigger;
 
-            telemetry.addData("slide level init: ", robot.outtake.getLevel());
+
+            if (robot.userInput.buttonPressed(1, "a")) {
+                slowMode = !slowMode;
+            }
+
             telemetry.addData("dumpServo Position:",robot.outtake.getDumpPosition());
             telemetry.update();
 
@@ -46,14 +52,18 @@ public class   TeleFreight  extends LinearOpMode {
 
             //check the bottom of the code (A) for the deleted bit i commented out
 
-//DRIVE
+//DRIVE MODES
             robot.mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
 
             if (slowMode) {
                 robot.mecanumDrive.setPowerFactor(0.2);
+//                telemetry.addLine("slow mode");
+                Log.i("drivemode", "slow");
             }
-            if (normieMode) {
+            else {
                 robot.mecanumDrive.setPowerFactor(0.8);
+//                telemetry.addLine("normie mode");
+                Log.i("drivemode", "normie");
             }
 
 //INTAKE
@@ -75,18 +85,18 @@ public class   TeleFreight  extends LinearOpMode {
                 }
             }
 
+//SET SLIDE LEVEL
+
 
 //RAISE SLIDE
             if(buttonA) {
                 if (!isApressed) {
                     robot.outtake.goUp();
                     isApressed = true;
-                    telemetry.addData("going up. level: ", robot.outtake.getLevel());
                 }
             } else {
                 isApressed = false;
             }
-
             if(buttonB) {
                 robot.outtake.goalldown();
                 telemetry.addLine("going all down");
@@ -115,12 +125,20 @@ public class   TeleFreight  extends LinearOpMode {
 
 
 //DUCK SPINNER
-            if (leftTrigger > 0 ) {
+            if (robot.userInput.buttonPressed(1, "left_trigger")){
+                toggleSpin = !toggleSpin;
+            }
+
+            if (toggleSpin) {
                 robot.spinner.setPower(0.8);
+                Log.i("duckSpin", "spinning");
             }
-            if (rightTrigger > 0) {
+            else {
                 robot.spinner.setPower(0);
+                Log.i("duckSpin", "not spinning");
             }
+
+
             telemetry.update();
         }
     }

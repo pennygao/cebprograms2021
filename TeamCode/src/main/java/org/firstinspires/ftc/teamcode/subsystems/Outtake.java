@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
+import org.firstinspires.ftc.teamcode.Configuration;
 
 import android.util.Log;
 
@@ -81,13 +82,13 @@ public class Outtake implements Subsystem {
         if (dumpState == 0){ //go up
             switch (defaultLevel) {
                 case 1:
-                    targetPosition = inchToTicks(3.0);
+                    targetPosition = inchToTicks(Configuration.SLIDER_FIRST_HEIGHT_INCHES); //3.0 inches
                     break;
                 case 2:
-                    targetPosition = inchToTicks(7.0);
+                    targetPosition = inchToTicks(Configuration.SLIDER_SECOND_HEIGHT_INCHES); //7.0
                     break;
                 case 3:
-                    targetPosition = inchToTicks(11.0);
+                    targetPosition = inchToTicks(Configuration.SLIDER_THIRD_HEIGHT_INCHES); //11.0
                 }
             dumpState++;
         }

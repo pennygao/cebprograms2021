@@ -10,17 +10,16 @@ import org.firstinspires.ftc.teamcode.subsystems.UserInput;
 
 import android.util.Log;
 @TeleOp
-public class   TeleFreight  extends LinearOpMode {
+public class  TeleFreight  extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this);
 
-        int slidecountup = 0;
-        int slidecountdown = 0;
         boolean isApressed = false;
         boolean inTransfer = false;
         boolean slowMode = false;
         boolean toggleSpin = false;
+        int intakeMode = 0; //toggle between 0(at rest), 1(go down) 2(dump)
 
 
 //RESETS
@@ -57,31 +56,52 @@ public class   TeleFreight  extends LinearOpMode {
                 robot.mecanumDrive.setPowerFactor(0.2);
 //                telemetry.addLine("slow mode");
                 Log.i("drivemode", "slow");
+                telemetry.addLine("Speed: Slow");
             }
             else {
                 robot.mecanumDrive.setPowerFactor(0.8);
 //                telemetry.addLine("normie mode");
                 Log.i("drivemode", "normie");
+                telemetry.addLine("Speed: Normie");
             }
 
 //INTAKE
-            if(buttonX) {
-                robot.intake.start();
-                telemetry.addLine("in buttonX loop");
+
+            if (robot.userInput.buttonPressed(2, "x")) {
+                if (intakeMode == 2){
+                    intakeMode = 0;
+                }
+                else intakeMode++;
+                if (intakeMode == 1){
+                    robot.intake.start();
+                    telemetry.addLine("in buttonX loop " + intakeMode);
+                }
+                if (intakeMode == 2){
+                    robot.intake.stop();
+                    telemetry.addLine("enter transfer " + intakeMode);
+                }
+                if (intakeMode == 0){
+                    robot.intake.reset();
+                    telemetry.addLine("transfer done " + intakeMode);
+                }
             }
 
-            if(buttonY){
-                if (!inTransfer) {
-                    robot.intake.stop();
-                    inTransfer=true;
-                    telemetry.addLine("enter transfer");
-                }
-                else {
-                    robot.intake.reset();
-                    inTransfer = false;
-                    telemetry.addLine("transfer done");
-                }
+            telemetry.addData("Intake Mode: ", intakeMode);
+            /*
+            if(intakeMode==1) {
+                robot.intake.start();
+                telemetry.addLine("in buttonX loop " + intakeMode);
             }
+            else if(intakeMode==2){
+                robot.intake.stop();
+                telemetry.addLine("enter transfer " + intakeMode);
+            }
+            else if (intakeMode==0) {
+                robot.intake.reset();
+                telemetry.addLine("transfer done " + intakeMode);
+            }
+
+             */
 
 //SET SLIDE LEVEL
             if (robot.userInput.buttonPressed(2, "b")) {

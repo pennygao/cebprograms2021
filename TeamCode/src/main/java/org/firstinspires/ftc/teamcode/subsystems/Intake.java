@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
+import org.firstinspires.ftc.teamcode.Configuration;
+
+import android.util.Log;
 
 public class Intake implements Subsystem {
     //Hardware: 1 motor, 1 encoder
@@ -45,12 +48,13 @@ public class Intake implements Subsystem {
     public void setTargetAngle(double targetAngle) {
         armPID.reset();
         armPID.setTargetPosition(targetAngle);
+        Log.i("intake", "angle set to "+targetAngle);
     }
     public void start() {
         setTargetPosition(Positions.INTAKE);
-        if(targetReached()){
-            sweepMotor.setPower(-0.8);
-        }
+        sweepMotor.setPower(-0.8);
+        Log.i("intake", targetReached() +
+                " " + getArmAngle() + " " + armMotor.getCurrentPosition());
     }
     public void stop() {
         setTargetPosition(Positions.DUMP);
@@ -64,16 +68,16 @@ public class Intake implements Subsystem {
     public void setTargetPosition(Positions position) {
         switch (position) {
             case RESET:
-                setTargetAngle(0 * Math.PI / 180);
+                setTargetAngle(Configuration.INTAKE_ANGLE_RESET * Math.PI / 180); //0
                 break;
             case INTAKE:
-                setTargetAngle(-80 * Math.PI / 180);
+                setTargetAngle(Configuration.INTAKE_ANGLE_DOWN * Math.PI / 180);//-80 deg -> radians
                 break;
             case DUMP:
-                setTargetAngle(-10 * Math.PI / 180);//10
+                setTargetAngle(Configuration.INTAKE_ANGLE_DUMP * Math.PI / 180);//-10 deg
                 break;
             case LIFT:
-                setTargetAngle(-5 * Math.PI / 180); //10
+                setTargetAngle(Configuration.INTAKE_ANGLE_LIFT * Math.PI / 180); //-5 deg
                 break;
         }
     }

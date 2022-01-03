@@ -10,10 +10,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.hardware.CachingDcMotorEx;
 import org.firstinspires.ftc.teamcode.hardware.CachingServo;
 import org.firstinspires.ftc.teamcode.hardware.Encoder;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -129,6 +131,9 @@ public class Robot {
 
     public Encoder getEncoder(String deviceName) {
         return new Encoder(getMotor(deviceName));
+    }
+    public VoltageSensor getVoltageSensor() {
+        return hardwareMap.voltageSensor.iterator().next();
     }
 
     public BNO055IMU getIMU(String deviceName) {

@@ -66,12 +66,10 @@ public class  TeleFreight  extends LinearOpMode {
 
 //INTAKE
             if(robot.intake.checkFreightIn()){
-                isFreightIn = !isFreightIn;
-            }
-            if(isFreightIn){
                 robot.intake.stop();
-                intakeMode = 0;
+                intakeMode = 2;
             }
+            telemetry.addLine("color sensor detect freight? "+ isFreightIn);
 
             if (robot.userInput.buttonPressed(2, "x")) {
                 if (intakeMode == 2){
@@ -155,8 +153,6 @@ public class  TeleFreight  extends LinearOpMode {
                 robot.spinner.setPower(0);
                 Log.i("duckSpin", "not spinning");
             }
-
-
             telemetry.update();
         }
     }

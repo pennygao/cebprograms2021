@@ -26,7 +26,7 @@ public class Intake implements Subsystem {
 
     //PID Stuff
     final private PIDFController armPID;
-    private static final PIDCoefficients ARM_PID_COEFFICIENTS = new PIDCoefficients(1, 0, 0);
+    private static final PIDCoefficients ARM_PID_COEFFICIENTS = new PIDCoefficients(0.7, 0, 0);
 
     private static final double ARM_ACCEPTABLE_ERROR_MARGIN = 0.05;
 
@@ -64,7 +64,7 @@ public class Intake implements Subsystem {
     }
     public void stop() {
         setTargetPosition(Positions.DUMP);
-        sweepMotor.setPower(-0.8);
+        sweepMotor.setPower(-1.0);
     }
     public void reset() {
         sweepMotor.setPower(0.0);
@@ -86,6 +86,7 @@ public class Intake implements Subsystem {
                 setTargetAngle(Configuration.INTAKE_ANGLE_LIFT * Math.PI / 180); //-5 deg
                 break;
         }
+        Log.i("intakePosition", "target position: " + position);
     }
 
     public boolean checkFreightIn(){
@@ -93,7 +94,8 @@ public class Intake implements Subsystem {
     }
 
     public void updateColorSensor() {
-        freightState = colorSensor.alpha() > 500;
+        Log.i("color sensor" , "output: "+colorSensor.alpha());
+        freightState = colorSensor.alpha() > Configuration.INTAKE_FREIGHT_DETECT;
         isFreightIn = freightState && !prevFreightState;
         prevFreightState = freightState;
     }

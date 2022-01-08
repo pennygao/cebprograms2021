@@ -13,7 +13,7 @@ public class Dump implements Command {
     double driveTime;
     // power: positive clockwise
 
-    public Spin(duckSpinner drive, double power, double time) {
+    public Dump(duckSpinner drive, double power, double time) {
         spinner =drive;
         clock=NanoClock.system();
         drivePower= power;

@@ -155,8 +155,6 @@ public class Outtake implements Subsystem {
                 else {
                     dumpServo.setPosition(servoPosition);
                 }
-
-
                 Log.i("dumpState", "on 2: ");
                 break;
             case 4:

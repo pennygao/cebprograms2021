@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
@@ -17,6 +18,10 @@ public class Intake implements Subsystem {
     //Hardware: 1 motor, 1 encoder
     final private DcMotorEx armMotor;
     final private DcMotorEx sweepMotor;
+    final private ColorSensor colorSensor;
+    private boolean prevFreightState;
+    private boolean freightState;
+    private boolean isFreightIn;
     private static final double TICKS_PER_REV = 4592; // 28 * 164=4592
 
     //PID Stuff
@@ -35,6 +40,7 @@ public class Intake implements Subsystem {
     public Intake(Robot robot) {
         armMotor = robot.getMotor("armMotor");
         armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        colorSensor =robot.getColorSensor("color");
 
         armPID = new PIDFController(ARM_PID_COEFFICIENTS);
         //In order for the PID controller to find the most efficient way to go to the target position,
@@ -81,6 +87,17 @@ public class Intake implements Subsystem {
                 break;
         }
     }
+
+    public boolean checkFreightIn(){
+        return isFreightIn;
+    }
+
+    public void updateColorSensor() {
+        freightState = colorSensor.alpha() > 500;
+        isFreightIn = freightState && !prevFreightState;
+        prevFreightState = freightState;
+    }
+
     private double getRawArmAngle() {
         // encoder position * (2pi / TICKS_PER_REV)
         return armMotor.getCurrentPosition() * (2 * Math.PI / TICKS_PER_REV);
@@ -100,5 +117,6 @@ public class Intake implements Subsystem {
     public void update(TelemetryPacket packet) {
         double armPower = armPID.update(getArmAngle());
         armMotor.setPower(armPower);
+        updateColorSensor();
     }
 }

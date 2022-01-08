@@ -57,10 +57,10 @@ public class UserInput implements Subsystem {
     }
 
     public void updateGamepad(Gamepad gamepad, boolean[] pressed, boolean[] prev){
+        //special case for left/right trigger; it stores values 0-1 so i turn it into boolean
         boolean leftTrigger = gamepad.left_trigger > 0;
         boolean rightTrigger = gamepad.right_trigger > 0;
-
-        pressed[0] = gamepad.a && !prev[0];
+        pressed[0] = gamepad.a && !prev[0];  //compare with previous  vvv
         pressed[1] = gamepad.b && !prev[1];
         pressed[2] = gamepad.x && !prev[2];
         pressed[3] = gamepad.y && !prev[3];
@@ -68,7 +68,7 @@ public class UserInput implements Subsystem {
         pressed[5] = gamepad.right_bumper && !prev[5];
         pressed[6] = leftTrigger && !prev[6];
         pressed[7] = rightTrigger && !prev[7];
-        prev[0] = gamepad.a;
+        prev[0] = gamepad.a;  //update previous vvv
         prev[1] = gamepad.b;
         prev[2] = gamepad.x;
         prev[3] = gamepad.y;

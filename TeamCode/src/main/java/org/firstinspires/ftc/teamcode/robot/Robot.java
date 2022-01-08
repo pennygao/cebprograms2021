@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.teamcode.hardware.CachingDcMotorEx;
 import org.firstinspires.ftc.teamcode.hardware.CachingServo;
@@ -127,6 +128,11 @@ public class Robot {
         DistanceSensor sensor = hardwareMap.get(DistanceSensor.class, deviceName);
         //listeners.add(sensor);
         return sensor;
+    }
+
+    public ColorSensor getColorSensor(String deviceName){
+        ColorSensor color= hardwareMap.get(ColorSensor.class, deviceName);
+        return color;
     }
 
     public Encoder getEncoder(String deviceName) {

@@ -15,8 +15,9 @@ public class  TeleFreight  extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this);
 
-        boolean isApressed = false;
+        boolean isAPressed = false;
         boolean inTransfer = false;
+        boolean isFreightIn = false;
         boolean slowMode = false;
         boolean toggleSpin = false;
         int intakeMode = 0; //toggle between 0(at rest), 1(go down) 2(dump)
@@ -33,8 +34,6 @@ public class  TeleFreight  extends LinearOpMode {
         while (!isStopRequested()) {
 
             boolean buttonA = gamepad2.a;
-            boolean buttonX = gamepad2.x;
-            boolean buttonY = gamepad2.y;
             boolean leftBumper = gamepad2.left_bumper;
             boolean rightBumper = gamepad2.right_bumper;
 
@@ -45,7 +44,7 @@ public class  TeleFreight  extends LinearOpMode {
 
 
 
-            //check the bottom of the code (A) for the deleted bit i commented out
+            //check the bottom of the code for the deleted bit i commented out
 
 //DRIVE MODES
             if (robot.userInput.buttonPressed(1, "a")) {
@@ -66,6 +65,13 @@ public class  TeleFreight  extends LinearOpMode {
             }
 
 //INTAKE
+            if(robot.intake.checkFreightIn()){
+                isFreightIn = !isFreightIn;
+            }
+            if(isFreightIn){
+                robot.intake.stop();
+                intakeMode = 0;
+            }
 
             if (robot.userInput.buttonPressed(2, "x")) {
                 if (intakeMode == 2){
@@ -76,7 +82,7 @@ public class  TeleFreight  extends LinearOpMode {
                     robot.intake.start();
                     telemetry.addLine("in buttonX loop " + intakeMode);
                 }
-                if (intakeMode == 2){
+                if (intakeMode == 2 ){
                     robot.intake.stop();
                     telemetry.addLine("enter transfer " + intakeMode);
                 }
@@ -87,21 +93,6 @@ public class  TeleFreight  extends LinearOpMode {
             }
 
             telemetry.addData("Intake Mode: ", intakeMode);
-            /*
-            if(intakeMode==1) {
-                robot.intake.start();
-                telemetry.addLine("in buttonX loop " + intakeMode);
-            }
-            else if(intakeMode==2){
-                robot.intake.stop();
-                telemetry.addLine("enter transfer " + intakeMode);
-            }
-            else if (intakeMode==0) {
-                robot.intake.reset();
-                telemetry.addLine("transfer done " + intakeMode);
-            }
-
-             */
 
 //SET SLIDE LEVEL
             if (robot.userInput.buttonPressed(2, "b")) {
@@ -111,14 +102,23 @@ public class  TeleFreight  extends LinearOpMode {
             telemetry.addData("slide default level", robot.outtake.defaultLevel );
 
 //RAISE SLIDE
+            if (robot.userInput.buttonPressed(2, "a")) {
+                isAPressed = !isAPressed;
+            }
+            if (isAPressed){
+                robot.outtake.dump();
+                isAPressed = false;
+            }
+            /*
             if(buttonA) {
-                if (!isApressed) {
+                if (!isAPressed) {
                     robot.outtake.dump();
-                    isApressed = true;
+                    isAPressed = true;
                 }
             } else {
-                isApressed = false;
+                isAPressed = false;
             }
+            */
 
 //DUMP
             if(leftBumper) {

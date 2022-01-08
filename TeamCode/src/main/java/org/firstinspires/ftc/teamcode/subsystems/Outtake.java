@@ -78,6 +78,10 @@ public class Outtake implements Subsystem {
         else { defaultLevel++; }
     }
 
+    public void setDefault(int level) {
+        defaultLevel = level;
+    }
+
     public void dump() {
         if (dumpState == 0){ //go up
             switch (defaultLevel) {
@@ -108,6 +112,10 @@ public class Outtake implements Subsystem {
         }
     }
 
+    public boolean dumpDone() {
+        return (dumpState == 0);
+    }
+
     @Override
     public void update(TelemetryPacket packet) {
 
@@ -130,7 +138,7 @@ public class Outtake implements Subsystem {
                 }
                 break;
             case 2: //dumping servo
-                if (NanoClock.system().seconds() - servoTime >= 1){
+                if (NanoClock.system().seconds() - servoTime >= 1){// FIXME Yujie
                     Log.i("dumpState", "ending 2 " +
                             dumpServo.getPosition() + " " + servoPosition);
                     setServoPosition(0.6);
@@ -157,7 +165,7 @@ public class Outtake implements Subsystem {
                 }
                 Log.i("dumpState", "on 2: ");
                 break;
-            case 4:
+            case 4: // slide going down
                 if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 0.5){ //what do i do here?
                     Log.i("dumpState", "ending 4");
                     dumpState=0;

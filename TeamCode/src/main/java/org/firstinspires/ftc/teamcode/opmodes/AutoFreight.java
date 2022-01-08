@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.commands.Dump;
 import org.firstinspires.ftc.teamcode.commands.Spin;
 import org.firstinspires.ftc.teamcode.commands.DriveForTime;
 
@@ -24,6 +25,8 @@ public class AutoFreight extends LinearOpMode {
     public static double HUB_X= -21.15;//-20.41;
     public static double HUB_Y= 1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + 0.85; //1.14;
+
+    private int elementPos = 1; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
     @Override
     public void runOpMode() throws InterruptedException {
         double driveTime;
@@ -31,6 +34,8 @@ public class AutoFreight extends LinearOpMode {
         CrabRobot robot = new CrabRobot(this);
         Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
+
+        robot.outtake.setServoPosition(0.6);
 
         waitForStart();
 
@@ -45,6 +50,8 @@ public class AutoFreight extends LinearOpMode {
 
         sleep(1000);
 
+        // TODO: check if element is at LEFT
+
         // move right to middle barcode
         Trajectory traj_right = drivetrain.trajectoryBuilder(traj_forward.end())
                 .strafeLeft(SCAN_RIGHT)
@@ -53,6 +60,8 @@ public class AutoFreight extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectory(traj_right));
 
         sleep(1000);
+        // TODO: check if element is at MIDDLE
+
         // move right to right barcode
         Trajectory traj_right2 = drivetrain.trajectoryBuilder(traj_right.end())
                 .strafeLeft(SCAN_RIGHT)
@@ -61,6 +70,8 @@ public class AutoFreight extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectory(traj_right2));
 
         sleep(1000);
+
+        // TODO: check if element is at RIGHT
 
         // move to spinner
         Trajectory traj_duck = drivetrain.trajectoryBuilder(traj_right2.end())
@@ -94,10 +105,9 @@ public class AutoFreight extends LinearOpMode {
 
         sleep(1000);
 
-        telemetry.addData("end X", traj_hub.end().component1());
-        telemetry.addData("end Y", traj_hub.end().component2());
-        telemetry.addData("end heading", traj_hub.end().component3());
-        telemetry.update();
+      // Dump
+        Dump dumpL = new Dump(robot.outtake, elementPos);
+        robot.runCommand(dumpL);
 
 
 /*

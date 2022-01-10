@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.commands.Turn;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaCurrentGame;
@@ -26,14 +27,18 @@ import java.util.List;
 
 @Autonomous(group = "test")
 public class AutoFreightDUCK extends LinearOpMode {
-    public static double SCAN_FORWARD = -3;
+    public static double SCAN_FORWARD = -4;
+    public static double SCAN_BACKWARD = 1;
     public static double SCAN_RIGHT = 10;
     public static double DUCK_X = -5.7;
     public static double DUCK_Y = 22.5;
     public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -21.15;//-20.41;
-    public static double HUB_Y= 1.5; //-25.87;
+    public static double HUB_X= -20.41; //-21;
+    public static double HUB_Y= 0; //1.5; //-25.87;
+    public static double HUB_1X= -18.41; //-21;
+    public static double HUB_1Y= -2; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + 0.85; //1.14;
+    public static double FINAL_HEADING= 45;
     private VuforiaCurrentGame vuforiaFreightFrenzy;
     private TfodCurrentGame tfodFreightFrenzy;
     boolean isDuckDetected = false;
@@ -88,8 +93,8 @@ public class AutoFreightDUCK extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        robot.outtake.setServoPosition(0.6);
-        robot.intake.setTargetPosition(Intake.Positions.LIFT);
+        robot.outtake.setServoPosition(0.60);
+        robot.intake.setTargetPosition(Intake.Positions.DUMP);
         robot.update();
 
 
@@ -103,7 +108,6 @@ public class AutoFreightDUCK extends LinearOpMode {
             elementPos = 1;
         }
 
-
         // move right to middle barcode
         Trajectory traj_right = drivetrain.trajectoryBuilder(traj_forward.end())
                     .strafeLeft(SCAN_RIGHT)
@@ -111,32 +115,17 @@ public class AutoFreightDUCK extends LinearOpMode {
         // check if element is at MIDDLE
         robot.runCommand(drivetrain.followTrajectory(traj_right));
         if(checkDuckPresence(robot)) {
-            sleep(100);
+            //sleep(100);
             elementPos = 2;
 
         }
 
-
-        // move right to right barcode
-        Trajectory traj_right2 = drivetrain.trajectoryBuilder(traj_right.end())
-                .strafeLeft(SCAN_RIGHT)
-                .build();
-
-        robot.runCommand(drivetrain.followTrajectory(traj_right2));
-        // TODO: check if element is at RIGHT
-        if(checkDuckPresence(robot)){
-           sleep(100);
-           elementPos = 3;
-        }
-
         // move to spinners
-        Trajectory traj_duck = drivetrain.trajectoryBuilder(traj_right2.end())
-                .strafeLeft(DUCK_Y)
+        Trajectory traj_duck = drivetrain.trajectoryBuilder(traj_right.end())
+                .strafeLeft(DUCK_Y+SCAN_RIGHT)
                 .build();
 
         robot.runCommand(drivetrain.followTrajectory(traj_duck));
-
-        sleep(100);
 
         /*
         //move to spinner 2.0
@@ -145,43 +134,52 @@ public class AutoFreightDUCK extends LinearOpMode {
                 .build();
 
         robot.runCommand(drivetrain.followTrajectory(traj_duck2));
-
-        sleep(1000);
-
          */
 
         double spinPower = 0.5;
-        driveTime = 2.5;
+        driveTime = 2.2;
         Spin spinDuck = new Spin(robot.spinner,spinPower, driveTime);
         robot.runCommands(spinDuck);
 
         // move to HUB
-        Trajectory traj_hub = drivetrain.trajectoryBuilder(traj_duck.end(), true)
-                .splineTo(new Vector2d(HUB_X, HUB_Y), HUB_HEADING)
-                .build();
+        Trajectory traj_hub;
+        if (elementPos == 1) {
+            traj_hub = drivetrain.trajectoryBuilder(traj_duck.end(), true)
+                    .splineTo(new Vector2d(HUB_1X, HUB_1Y), HUB_HEADING)
+                    .build();
+        } else {
+            traj_hub = drivetrain.trajectoryBuilder(traj_duck.end(), true)
+                    .splineTo(new Vector2d(HUB_X, HUB_Y), HUB_HEADING)
+                    .build();
+        }
+        // Dump
+        Dump dumpL = new Dump(robot, elementPos);
 
         robot.runCommand(drivetrain.followTrajectory(traj_hub));
-
-        sleep(500);
-        telemetry.addLine("done moving to hub");
-        telemetry.update();
-
-      // Dump
-        robot.outtake.setServoPosition(0.6);
-        robot.update();
-        sleep(500);
-        Dump dumpL = new Dump(robot.outtake, robot.intake, elementPos);
         robot.runCommand(dumpL);
 
 
-/*
-        robot.runCommand(drivetrain.followTrajectory(
-                drivetrain.trajectoryBuilder(traj.end(), true)
-                        .splineTo(new Vector2d(0, 0), Math.toRadians(180))
+
+        //go back slightly
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .forward(5)
+                        .build()));
+
+        //turn
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
                         .build()
         ));
 
- */
+        //move to warehouse
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .forward(-80)
+                        .build()
+        ));
+
         tfodFreightFrenzy.deactivate();
         vuforiaFreightFrenzy.close();
         tfodFreightFrenzy.close();

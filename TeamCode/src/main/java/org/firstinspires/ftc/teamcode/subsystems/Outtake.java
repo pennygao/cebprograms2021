@@ -120,8 +120,11 @@ public class Outtake implements Subsystem {
     public void update(TelemetryPacket packet) {
 
         switch (dumpState){
+            case 0:
+                dumpServo.setPosition(servoPosition);
+                break;
             case 1: //moving slide up
-                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 0.5){
+                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 1){
                     Log.i("dumpState", "ending 1: "
                             + slideMotor.getCurrentPosition() + " " + targetPosition);
                     setServoPosition(0.25);
@@ -138,7 +141,7 @@ public class Outtake implements Subsystem {
                 }
                 break;
             case 2: //dumping servo
-                if (NanoClock.system().seconds() - servoTime >= 1){// FIXME Yujie
+                if (NanoClock.system().seconds() - servoTime >= 0.7){// FIXME Yujie
                     Log.i("dumpState", "ending 2 " +
                             dumpServo.getPosition() + " " + servoPosition);
                     setServoPosition(0.6);
@@ -152,7 +155,7 @@ public class Outtake implements Subsystem {
                 }
                 break;
             case 3:
-                if (NanoClock.system().seconds() - servoTime >= 1){
+                if (NanoClock.system().seconds() - servoTime >= 0.7){
                     Log.i("dumpState", "ending 3 " +
                             dumpServo.getPosition() + " " + servoPosition);
                     targetPosition = 0;
@@ -166,7 +169,7 @@ public class Outtake implements Subsystem {
                 Log.i("dumpState", "on 2: ");
                 break;
             case 4: // slide going down
-                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 0.5){ //what do i do here?
+                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 1){ //what do i do here?
                     Log.i("dumpState", "ending 4");
                     dumpState=0;
                 }

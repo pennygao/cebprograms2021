@@ -64,7 +64,7 @@ public class Intake implements Subsystem {
     }
     public void stop() {
         setTargetPosition(Positions.DUMP);
-        sweepMotor.setPower(-1.0);
+        sweepMotor.setPower(-1.4);
     }
     public void reset() {
         sweepMotor.setPower(0.0);

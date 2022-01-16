@@ -124,7 +124,7 @@ public class Outtake implements Subsystem {
                 dumpServo.setPosition(servoPosition);
                 break;
             case 1: //moving slide up
-                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 1){
+                if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= Configuration.SLIDER_ACCEPTABLE_ERROR_TICKS){ //it should be around 1/8 of an inch
                     Log.i("dumpState", "ending 1: "
                             + slideMotor.getCurrentPosition() + " " + targetPosition);
                     setServoPosition(0.25);

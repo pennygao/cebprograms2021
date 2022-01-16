@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-public class AutoFreightUNDUCK {
+public class AutoRedDuck {
 
 }

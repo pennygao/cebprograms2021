@@ -155,7 +155,7 @@ public class Outtake implements Subsystem {
                 }
                 break;
             case 3:
-                if (NanoClock.system().seconds() - servoTime >= 0.7){
+                if (NanoClock.system().seconds() - servoTime >= 1){
                     Log.i("dumpState", "ending 3 " +
                             dumpServo.getPosition() + " " + servoPosition);
                     targetPosition = 0;

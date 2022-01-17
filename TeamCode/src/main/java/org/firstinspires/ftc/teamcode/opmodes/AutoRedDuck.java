@@ -43,6 +43,7 @@ public class AutoRedDuck extends LinearOpMode {
     public static double HUB_1Y= 12.43; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + Math.toRadians(310); //1.14;
     public static double FINAL_HEADING= 140;
+    public static boolean GO_TO_WAREHOUSE = true;
     public static double DUCK_LEFT_THRESHOLD = 750;
 
     private int adjPos(int Pos) {
@@ -127,32 +128,32 @@ public class AutoRedDuck extends LinearOpMode {
                         .build()
         ));
 
+        if (GO_TO_WAREHOUSE){
+            ////////////// TO WAREHOUSE //////////////
+            //move to warehouse
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            .forward(80)
+                            .build()
+            ));
 
-        ////////////// TO WAREHOUSE //////////////
-        //move to warehouse
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(80)
-                        .build()
-        ));
-
-
-
-
-        ////////////// TO STORAGE //////////////
-        //move to warehouse
-        /*robot.runCommand(drivetrain.followTrajectorySequence(
+        }else{
+            ////////////// TO STORAGE //////////////
+            //move to warehouse
+            robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .forward(-30)
                         .build()
-        ));
-        robot.runCommand(drivetrain.followTrajectorySequence(
+            ));
+            robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .strafeRight(-4.5)
                         .build()
-        ));
+            ));
 
-         */
+
+
+        }
 
         od.close();
 

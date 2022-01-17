@@ -25,7 +25,9 @@ public class Outtake implements Subsystem {
     private int targetPosition = 0;
     private Telemetry telemetry;
     private Servo dumpServo;
-    private double servoPosition = 0;
+    public Servo armServo;
+    private double armServoPosition = 0;
+    private double dumpServoPosition = 0;
     private int dumpState = 0;
     private double servoTime;
     private double dumpTime = 1.5;
@@ -40,6 +42,7 @@ public class Outtake implements Subsystem {
         this.telemetry = telemetry;
         dumpServo = robot.getServo("dumpServo");
         slideMotor = robot.getMotor("slide");
+        armServo = robot.getServo("armServo");
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidePower = 1;
@@ -52,8 +55,11 @@ public class Outtake implements Subsystem {
     }
 
     public void setServoPosition(double position) {
-        this.servoPosition = position;
+        this.dumpServoPosition = position;
         // set encode to new position
+    }
+    public void setArmPosition(double position){
+        this.armServoPosition = position;
     }
 
     public void setPower (double power ){
@@ -120,9 +126,10 @@ public class Outtake implements Subsystem {
     @Override
     public void update(TelemetryPacket packet) {
 
+        armServo.setPosition(armServoPosition);
         switch (dumpState){
             case 0:
-                dumpServo.setPosition(servoPosition);
+                dumpServo.setPosition(dumpServoPosition);
                 break;
             case 1: //moving slide up
                 if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= Configuration.SLIDER_ACCEPTABLE_ERROR_TICKS){ //it should be around 1/8 of an inch
@@ -144,28 +151,28 @@ public class Outtake implements Subsystem {
             case 2: //dumping servo
                 if (NanoClock.system().seconds() - servoTime >= 1){// FIXME Yujie
                     Log.i("dumpState", "ending 2 " +
-                            dumpServo.getPosition() + " " + servoPosition);
+                            dumpServo.getPosition() + " " + dumpServoPosition);
                     setServoPosition(0.6);
                     dumpState++;
                     Log.i("servoTime", "servo 2:"+NanoClock.system().seconds());
                     servoTime = NanoClock.system().seconds();
                 }
                 else {
-                    dumpServo.setPosition(servoPosition);
+                    dumpServo.setPosition(dumpServoPosition);
                     Log.i("dumpState", "on 2: ");
                 }
                 break;
             case 3:
                 if (NanoClock.system().seconds() - servoTime >= dumpTime){
                     Log.i("dumpState", "ending 3 " +
-                            dumpServo.getPosition() + " " + servoPosition);
+                            dumpServo.getPosition() + " " + dumpServoPosition);
                     targetPosition = 0;
                     dumpState++;
                     Log.i("servoTime", "servo 3:"+NanoClock.system().seconds());
                     servoTime = NanoClock.system().seconds();
                 }
                 else {
-                    dumpServo.setPosition(servoPosition);
+                    dumpServo.setPosition(dumpServoPosition);
                 }
                 Log.i("dumpState", "on 2: ");
                 break;

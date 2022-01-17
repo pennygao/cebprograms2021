@@ -26,6 +26,7 @@ public class  TeleFreight  extends LinearOpMode {
 //RESETS
         robot.intake.setTargetPosition(Intake.Positions.RESET);
         robot.outtake.setServoPosition(0.6);
+        robot.outtake.setArmPosition(0.0);
 
         waitForStart();
 
@@ -67,6 +68,7 @@ public class  TeleFreight  extends LinearOpMode {
 //INTAKE
             if(robot.intake.checkFreightIn()){
                 robot.intake.stop();
+                slowMode = false;
                 intakeMode = 2;
             }
             telemetry.addLine("color sensor detect freight? "+ isFreightIn);
@@ -78,6 +80,7 @@ public class  TeleFreight  extends LinearOpMode {
                 else intakeMode++;
                 if (intakeMode == 1){
                     robot.intake.start();
+                    slowMode = true;
                     telemetry.addLine("in buttonX loop " + intakeMode);
                 }
                 if (intakeMode == 2 ){
@@ -86,6 +89,7 @@ public class  TeleFreight  extends LinearOpMode {
                 }
                 if (intakeMode == 0){
                     robot.intake.reset();
+                    slowMode = false;
                     telemetry.addLine("transfer done " + intakeMode);
                 }
             }
@@ -145,7 +149,7 @@ public class  TeleFreight  extends LinearOpMode {
 //DUCK SPINNER
             if (robot.userInput.buttonPressed(1, "left_bumper")){
                 //toggleSpin = !toggleSpin;
-                robot.spinner.setPower(0.8);
+                robot.spinner.setPower(0.65);
                 Log.i("duckSpin", "spinning");
             }
             else if (robot.userInput.buttonPressed(1, "right_bumper")){

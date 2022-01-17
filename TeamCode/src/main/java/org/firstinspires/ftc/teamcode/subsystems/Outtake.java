@@ -28,6 +28,7 @@ public class Outtake implements Subsystem {
     private double servoPosition = 0;
     private int dumpState = 0;
     private double servoTime;
+    private double dumpTime = 1.5;
 
     public enum slide_state {
         LEVEL_0,
@@ -141,7 +142,7 @@ public class Outtake implements Subsystem {
                 }
                 break;
             case 2: //dumping servo
-                if (NanoClock.system().seconds() - servoTime >= 0.7){// FIXME Yujie
+                if (NanoClock.system().seconds() - servoTime >= 1){// FIXME Yujie
                     Log.i("dumpState", "ending 2 " +
                             dumpServo.getPosition() + " " + servoPosition);
                     setServoPosition(0.6);
@@ -155,7 +156,7 @@ public class Outtake implements Subsystem {
                 }
                 break;
             case 3:
-                if (NanoClock.system().seconds() - servoTime >= 1){
+                if (NanoClock.system().seconds() - servoTime >= dumpTime){
                     Log.i("dumpState", "ending 3 " +
                             dumpServo.getPosition() + " " + servoPosition);
                     targetPosition = 0;

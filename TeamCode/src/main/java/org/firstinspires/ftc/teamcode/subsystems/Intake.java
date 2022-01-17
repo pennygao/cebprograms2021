@@ -58,7 +58,7 @@ public class Intake implements Subsystem {
     }
     public void start() {
         setTargetPosition(Positions.INTAKE);
-        sweepMotor.setPower(-0.8);
+        sweepMotor.setPower(-0.6);
         Log.i("intake", targetReached() +
                 " " + getArmAngle() + " " + armMotor.getCurrentPosition());
     }
@@ -68,7 +68,11 @@ public class Intake implements Subsystem {
     }
     public void reset() {
         sweepMotor.setPower(0.0);
-        //setTargetPosition(Positions.RESET);
+        setTargetPosition(Positions.RESET);
+    }
+    public void lift() {
+        sweepMotor.setPower(0.0);
+        setTargetPosition(Positions.LIFT);
     }
 
     public void setTargetPosition(Positions position) {

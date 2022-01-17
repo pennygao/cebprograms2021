@@ -105,6 +105,8 @@ public class  TeleFreight  extends LinearOpMode {
             }
             if (isAPressed){
                 robot.outtake.dump();
+                robot.intake.lift();
+
                 isAPressed = false;
             }
             /*
@@ -127,7 +129,7 @@ public class  TeleFreight  extends LinearOpMode {
                     break;
                     case 2: servoPosition= 0.25;
                     break;
-                    case 3: servoPosition= 0.25;
+                    case 3: servoPosition= 0.30;
                     break;
                 }
                 robot.outtake.setServoPosition(servoPosition);
@@ -141,11 +143,18 @@ public class  TeleFreight  extends LinearOpMode {
 
 
 //DUCK SPINNER
-            if (robot.userInput.buttonPressed(1, "left_trigger")){
-                toggleSpin = !toggleSpin;
+            if (robot.userInput.buttonPressed(1, "left_bumper")){
+                //toggleSpin = !toggleSpin;
+                robot.spinner.setPower(0.8);
+                Log.i("duckSpin", "spinning");
+            }
+            else if (robot.userInput.buttonPressed(1, "right_bumper")){
+                //toggleSpin = !toggleSpin;
+                robot.spinner.setPower(0.0);
+                Log.i("duckSpin", "not spinning");
             }
 
-            if (toggleSpin) {
+            /*if (toggleSpin) {
                 robot.spinner.setPower(0.8);
                 Log.i("duckSpin", "spinning");
             }
@@ -153,6 +162,7 @@ public class  TeleFreight  extends LinearOpMode {
                 robot.spinner.setPower(0);
                 Log.i("duckSpin", "not spinning");
             }
+            */
             telemetry.update();
         }
     }

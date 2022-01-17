@@ -35,7 +35,7 @@ public class AutoBlueDuck extends LinearOpMode {
     public static double SCAN_RIGHT = 10;
     public static double DUCK_X = -3;
     public static double DUCK_Y = 24;
-    public static double DUCK_HEADING = Math.toRadians(36); // degree
+    public static double DUCK_HEADING = Math.toRadians(30); // degree
     public static double DUCK_BUF = 7.0;
     public static double HUB_X= -20.41; //-21;
     public static double HUB_Y= 0; //1.5; //-25.87;

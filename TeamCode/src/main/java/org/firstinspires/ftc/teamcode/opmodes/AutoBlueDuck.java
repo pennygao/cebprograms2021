@@ -36,9 +36,9 @@ public class AutoBlueDuck extends LinearOpMode {
     public static double DUCK_X = -3;
     public static double DUCK_Y = 24;
     public static double DUCK_HEADING = Math.toRadians(30); // degree
-    public static double DUCK_BUF = 7.0;
-    public static double HUB_X= -20.41; //-21;
-    public static double HUB_Y= 0; //1.5; //-25.87;
+    public static double DUCK_BUF = 6.0;
+    public static double HUB_X= -20.1; //-21;
+    public static double HUB_Y= 0.5; //1.5; //-25.87;
     public static double HUB_1X= -18.41; //-21;
     public static double HUB_1Y= -2; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + 0.85; //1.14;
@@ -83,7 +83,7 @@ public class AutoBlueDuck extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectory(traj_duck_back));
 
         double spinPower = 0.5;
-        driveTime = 4;
+        driveTime = 3;
         Spin spinDuck = new Spin(robot.spinner,spinPower, driveTime);
         robot.runCommands(spinDuck);
 
@@ -93,11 +93,12 @@ public class AutoBlueDuck extends LinearOpMode {
             traj_hub = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
                     .splineTo(new Vector2d(HUB_1X, HUB_1Y), HUB_HEADING)
                     .build();
-        } else {
+        } else{
             traj_hub = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
                     .splineTo(new Vector2d(HUB_X, HUB_Y), HUB_HEADING)
                     .build();
         }
+
         // Dump
         Dump dumpL = new Dump(robot, elementPos);
 
@@ -119,10 +120,28 @@ public class AutoBlueDuck extends LinearOpMode {
                         .build()
         ));
 
+        /*
+        ////////////// TO WAREHOUSE //////////////
         //move to warehouse
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .forward(-80)
+                        .build()
+        ));
+
+         */
+
+
+        ////////////// TO STORAGE //////////////
+        //move to warehouse
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .forward(30)
+                        .build()
+        ));
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .strafeRight(-4.5)
                         .build()
         ));
 

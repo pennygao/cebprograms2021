@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -14,23 +13,27 @@ import org.firstinspires.ftc.robotcore.external.tfod.TfodCurrentGame;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 
+
 import java.util.List;
 
 
 public class objectDetector implements Subsystem {
     public static int    NUM_TRY = 10;
-    public static double DUCK_LEFT_THRESHOLD = 750;
+    public static double DUCK_LEFT_THRESHOLD = 800;
     public static double CONFIDENCE = 0.7;
+    public static String LABEL_STR = "TSE"; //"Duck"
 
     private VuforiaCurrentGame vuforiaFreightFrenzy;
-    private TfodCurrentGame tfodFreightFrenzy;
+    //private TfodCurrentGame tfodFreightFrenzy;
+    private TfodTSE tfodFreightFrenzy;
     Recognition recognition;
     Telemetry telemetry;
     Robot     robot;
 
     public objectDetector(Robot robot, Telemetry telemetry) {
         vuforiaFreightFrenzy = new VuforiaCurrentGame();
-        tfodFreightFrenzy = new TfodCurrentGame();
+        //tfodFreightFrenzy = new TfodCurrentGame();
+        tfodFreightFrenzy = new TfodTSE();
         this.telemetry = telemetry;
         this.robot = robot;
     }
@@ -43,7 +46,7 @@ public class objectDetector implements Subsystem {
                 false, // enableCameraMonitoring
                 VuforiaLocalizer.Parameters.CameraMonitorFeedback.NONE, // cameraMonitorFeedback
                 0, // dx
-                0, // dy
+                0, //dy
                 0, // dz
                 AxesOrder.XYZ, // axesOrder
                 0, // firstAngle
@@ -106,6 +109,8 @@ public class objectDetector implements Subsystem {
         int index;
 
         double left = 0;
+        double right=0;
+        double middle = 0;
         boolean foundDuck = false;
 
         for (int i=0; i< NUM_TRY; i++) {
@@ -127,10 +132,12 @@ public class objectDetector implements Subsystem {
 
                     telemetry.addData("Label", recognition.getLabel());
                     // Check if label is Duck
-                    if (recognition.getLabel().equals("Duck")) {
+                    if (recognition.getLabel().equals(LABEL_STR)) {
                         left = Double.parseDouble(JavaUtil.formatNumber(recognition.getLeft(), 0));
-                        telemetry.addData("Left", left);
-                        if (left < DUCK_LEFT_THRESHOLD) {
+                        right = Double.parseDouble(JavaUtil.formatNumber(recognition.getRight(), 0));
+                        middle = (left + right)/2.0;
+                        telemetry.addData("middle", middle);
+                        if (middle < DUCK_LEFT_THRESHOLD) {
                             pos = 1;
                         } else {
                             pos = 2;

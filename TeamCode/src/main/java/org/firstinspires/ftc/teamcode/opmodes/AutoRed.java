@@ -36,15 +36,15 @@ public class AutoRed extends LinearOpMode {
     public static double DUCK_X = -5.7;
     public static double DUCK_Y = 22.5;
     public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -20.14; //-21;
-    public static double HUB_Y= -10.09; //1.5; //-25.87;
-    public static double HUB_1X= -20.14; //-21;
-    public static double HUB_1Y= -10.09; //1.5; //-25.87;
-    public static double HUB_HEADING= Math.PI + Math.toRadians(30); //1.14;
-    public static double FINAL_HEADING= 45;
+    public static double HUB_X= -21.14; //-21;
+    public static double HUB_Y= -13.09; //1.5; //-25.87;
+    public static double HUB_1X= -22.5; //-21;
+    public static double HUB_1Y= -12.75; //1.5; //-25.87;
+    public static double HUB_HEADING= Math.PI+Math.toRadians(28);//1.14;
+    public static double FINAL_HEADING= 60;
 
     private int adjPos(int Pos){
-        return (4 - Pos);
+        return (Pos);
     }
 
 
@@ -80,10 +80,10 @@ public class AutoRed extends LinearOpMode {
          */
 
         elementPos = od.checkDuckPresence();
-        telemetry.addData("Duck Pos :", elementPos);
-        elementPos = adjPos(elementPos);
-        telemetry.addData("Duck Pos :", elementPos);
-        telemetry.update();
+        //telemetry.addData("Duck Pos :", elementPos);
+        //elementPos = adjPos(elementPos);
+        //telemetry.addData("dump level :", elementPos);
+        //telemetry.update();
 
         //TODO: move to hub
         Trajectory traj_hub;

@@ -19,7 +19,8 @@ public class  TeleFreight  extends LinearOpMode {
         boolean inTransfer = false;
         boolean isFreightIn = false;
         boolean slowMode = false;
-        boolean toggleSpin = false;
+        boolean blueToggleSpin = false;
+        boolean redToggleSpin = false;
         int intakeMode = 0; //toggle between 0(at rest), 1(go down) 2(dump)
 
 
@@ -147,6 +148,8 @@ public class  TeleFreight  extends LinearOpMode {
 
 
 //DUCK SPINNER
+            //blue = right; red = left
+            /*
             if (robot.userInput.buttonPressed(1, "left_bumper")){
                 //toggleSpin = !toggleSpin;
                 robot.spinner.setPower(0.65);
@@ -157,16 +160,26 @@ public class  TeleFreight  extends LinearOpMode {
                 robot.spinner.setPower(0.0);
                 Log.i("duckSpin", "not spinning");
             }
-
-            /*if (toggleSpin) {
+             */
+            if (robot.userInput.buttonPressed(1, "right_bumper")) {
+                blueToggleSpin = !blueToggleSpin;
+            }
+            else if (robot.userInput.buttonPressed(1, "left_bumper")) {
+                redToggleSpin = !redToggleSpin;
+            }
+            if (blueToggleSpin) {
                 robot.spinner.setPower(0.8);
-                Log.i("duckSpin", "spinning");
+                Log.i("duckSpin", "spinning blue");
+            }
+            else if (redToggleSpin) {
+                robot.spinner.setPower(-0.8);
+                Log.i("duckSpin", "spinning red");
             }
             else {
                 robot.spinner.setPower(0);
                 Log.i("duckSpin", "not spinning");
             }
-            */
+
             telemetry.update();
         }
     }

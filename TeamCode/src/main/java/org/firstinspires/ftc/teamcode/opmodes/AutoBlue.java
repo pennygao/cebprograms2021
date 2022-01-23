@@ -98,6 +98,8 @@ public class AutoBlue extends LinearOpMode {
 
          */
         // TODO: Dump to proper level
+        robot.intake.setTargetPosition(Intake.Positions.LIFT);
+        robot.update();
         Dump dumpL = new Dump(robot, elementPos);
 
         robot.runCommand(drivetrain.followTrajectory(traj_hub));

@@ -36,10 +36,10 @@ public class AutoBlue extends LinearOpMode {
     public static double DUCK_X = -5.7;
     public static double DUCK_Y = 22.5;
     public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -22.44; //-21;
-    public static double HUB_Y= 12.08; //1.5; //-25.87;
-    public static double HUB_1X= -20.44; //-21;
-    public static double HUB_1Y= 11.36; //1.5; //-25.87;
+    public static double HUB_X= -26; //-21;
+    public static double HUB_Y= 16.08; //1.5; //-25.87;
+    public static double HUB_1X= -25; //-21;
+    public static double HUB_1Y= 15; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + 5.7; //1.14;
     public static double FINAL_HEADING= 125;
 
@@ -77,8 +77,8 @@ public class AutoBlue extends LinearOpMode {
 
 
         elementPos = od.checkDuckPresence();
-        telemetry.addData("Duck Pos :", elementPos);
-        telemetry.update();
+        //telemetry.addData("Duck Pos :", elementPos);
+        //telemetry.update();
 
         //TODO: move to hub
         Trajectory traj_hub;
@@ -108,7 +108,7 @@ public class AutoBlue extends LinearOpMode {
         // TODO: Back 3 inches
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(3)
+                        .forward(8)
                         .build()));
 
         // TODO: Turn towards warehouse

@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.commands.Dump;
 import org.firstinspires.ftc.teamcode.commands.Spin;
-import org.firstinspires.ftc.teamcode.commands.DriveForTime;
+//import org.firstinspires.ftc.teamcode.commands.DriveForTime;
 
-import org.firstinspires.ftc.teamcode.robot.Robot;
+//import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.commands.Turn;
+//import org.firstinspires.ftc.teamcode.commands.Turn;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaCurrentGame;
@@ -29,29 +29,28 @@ import java.util.List;
 import android.util.Log;
 
 @Autonomous(group = "test")
-public class AutoRed extends LinearOpMode {
+public class RedDuckStorage extends LinearOpMode {
     public static double SCAN_FORWARD = -4;
     public static double SCAN_BACKWARD = 1;
     public static double SCAN_RIGHT = 10;
-    public static double DUCK_X = -5.7;
-    public static double DUCK_Y = 22.5;
-    public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -21.14; //-21;
-    public static double HUB_Y= -13.09; //1.5; //-25.87;
-    public static double HUB_1X= -22.5; //-21;
-    public static double HUB_1Y= -12.75; //1.5; //-25.87;
-    public static double HUB_HEADING= Math.PI+Math.toRadians(28);//1.14;
-    public static double FINAL_HEADING= 60;
+    public static double DUCK_X = -8; //-2.93-
+    public static double DUCK_Y = -15;//-11.9;
+    public static double DUCK_HEADING = Math.toRadians(290); // degree//305
+    public static double DUCK_BUF = 3;
+    public static double HUB_X= -24; //-21;
+    public static double HUB_Y= 17.5; //1.5; //-25.87;
+    public static double HUB_1X= -22.8;//-18.41; //-21;
+    public static double HUB_1Y= 14.2;//12.43; //1.5; //-25.87;
+    public static double HUB_HEADING= Math.PI + Math.toRadians(320); //1.14; //310
+    public static double FINAL_HEADING= 130;
+    public static boolean GO_TO_WAREHOUSE = false;
+    public static double DUCK_LEFT_THRESHOLD = 750;
 
-    private int adjPos(int Pos){
-        return (Pos);
-    }
 
-
-    private int elementPos = 3      ; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
+    private int elementPos = 3; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
     @Override
     public void runOpMode() throws InterruptedException {
-        int elementPos = 3;
+        double driveTime;
 
         CrabRobot robot = new CrabRobot(this);
         Drivetrain drivetrain = new Drivetrain(robot);
@@ -70,39 +69,47 @@ public class AutoRed extends LinearOpMode {
         robot.intake.setTargetPosition(Intake.Positions.DUMP);
         robot.update();
 
-
-        //move forward
-        /*
-        Trajectory traj_forward = drivetrain.trajectoryBuilder(new Pose2d())
-                .forward(SCAN_FORWARD)
-                .build();
-
-         */
-
         elementPos = od.checkDuckPresence();
-        //telemetry.addData("Duck Pos :", elementPos);
-        //elementPos = adjPos(elementPos);
-        //telemetry.addData("dump level :", elementPos);
+        //telemetry.addData("Level:", elementPos);
         //telemetry.update();
 
-        //TODO: move to hub
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .forward(-10)
+                        .build()
+        ));
+
+        // move to spinners
+        Trajectory traj_duck = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                .splineTo(new Vector2d(DUCK_X, DUCK_Y), DUCK_HEADING)
+                .build();
+
+        robot.runCommand(drivetrain.followTrajectory(traj_duck));
+
+        Trajectory traj_duck_back = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                .forward(DUCK_BUF)
+                .build();
+
+        robot.runCommand(drivetrain.followTrajectory(traj_duck_back));
+
+        double spinPower = -0.5;
+        driveTime = 3;
+        Spin spinDuck = new Spin(robot.spinner,spinPower, driveTime);
+        robot.runCommands(spinDuck);
+
+        // move to HUB
         Trajectory traj_hub;
         if (elementPos == 1) {
             traj_hub = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
                     .splineTo(new Vector2d(HUB_1X, HUB_1Y), HUB_HEADING)
                     .build();
-        } else {
+        } else{
             traj_hub = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
                     .splineTo(new Vector2d(HUB_X, HUB_Y), HUB_HEADING)
                     .build();
         }
-        /*
-        Trajectory traj_forward = drivetrain.trajectoryBuilder(new Pose2d())
-                .forward(SCAN_FORWARD)
-                .build();
 
-         */
-        // TODO: Dump to proper level
+        // Dump
         robot.intake.setTargetPosition(Intake.Positions.LIFT);
         robot.update();
         Dump dumpL = new Dump(robot, elementPos);
@@ -110,13 +117,14 @@ public class AutoRed extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectory(traj_hub));
         robot.runCommand(dumpL);
 
-        // TODO: Back 3 inches
+
+
+        //go back slightly
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(3)
+                        .forward(5)
                         .build()));
 
-        // TODO: Turn towards warehouse
         //turn
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
@@ -124,17 +132,35 @@ public class AutoRed extends LinearOpMode {
                         .build()
         ));
 
-        // TODO: GO to warehouse
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(45)
-                        .build()));
+        if (GO_TO_WAREHOUSE){
+            ////////////// TO WAREHOUSE //////////////
+            //move to warehouse
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            .forward(80)
+                            .build()
+            ));
 
-        sleep(5000);
+        }else{
+            ////////////// TO STORAGE //////////////
+            //move to warehouse
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            .forward(-30)
+                            .build()
+            ));
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            .strafeRight(-4.5)
+                            .build()
+            ));
+
+
+
+        }
 
         od.close();
 
     }
 
 }
-

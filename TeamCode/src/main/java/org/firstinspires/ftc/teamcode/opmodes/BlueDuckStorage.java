@@ -29,7 +29,7 @@ import java.util.List;
 import android.util.Log;
 
 @Autonomous(group = "test")
-public class AutoBlueDuckStorage extends LinearOpMode {
+public class BlueDuckStorage extends LinearOpMode {
     public static double SCAN_FORWARD = -4;
     public static double SCAN_BACKWARD = 1;
     public static double SCAN_RIGHT = 10;

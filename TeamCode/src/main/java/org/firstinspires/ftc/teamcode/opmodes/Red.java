@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.commands.DriveTillIntake;
 import org.firstinspires.ftc.teamcode.commands.Dump;
 import org.firstinspires.ftc.teamcode.commands.Spin;
 import org.firstinspires.ftc.teamcode.commands.DriveForTime;
@@ -42,6 +43,7 @@ public class Red extends LinearOpMode {
     public static double HUB_1Y= -12.75; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI+Math.toRadians(28);//1.14;
     public static double FINAL_HEADING= 60;
+    public static double FREIGHT_HEADING= -45;
 
     private int adjPos(int Pos){
         return (Pos);
@@ -130,7 +132,17 @@ public class Red extends LinearOpMode {
                         .forward(45)
                         .build()));
 
-        sleep(5000);
+        //turn towards freights
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .turn(Math.toRadians(FREIGHT_HEADING - drivetrain.getPoseEstimate().getHeading()))
+                        .build()
+        ));
+
+        DriveTillIntake driveTillIntake = new DriveTillIntake(robot, robot.mecanumDrive,
+                new Pose2d(0.2,0, Math.toRadians(0)),
+                10);
+        robot.runCommand(driveTillIntake);
 
         od.close();
 

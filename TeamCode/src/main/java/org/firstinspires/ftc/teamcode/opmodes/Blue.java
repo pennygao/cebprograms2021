@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.commands.DriveTillIntake;
 import org.firstinspires.ftc.teamcode.commands.Dump;
 import org.firstinspires.ftc.teamcode.commands.Spin;
 import org.firstinspires.ftc.teamcode.commands.DriveForTime;
@@ -41,7 +42,8 @@ public class Blue extends LinearOpMode {
     public static double HUB_1X= -25; //-21;
     public static double HUB_1Y= 15; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + 5.7; //1.14;
-    public static double FINAL_HEADING= 125;
+    public static double FINAL_HEADING= -55; //125 + 180;
+    public static double FREIGHT_HEADING= 45; //125 + 90;
 
 
     private int elementPos = 3; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
@@ -98,7 +100,7 @@ public class Blue extends LinearOpMode {
 
          */
         // TODO: Dump to proper level
-        robot.intake.setTargetPosition(Intake.Positions.LIFT);
+        robot.intake.setTargetPosition(Intake.Positions.DUMP);
         robot.update();
         Dump dumpL = new Dump(robot, elementPos);
 
@@ -122,10 +124,21 @@ public class Blue extends LinearOpMode {
         // TODO: GO to warehouse
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(-60)
+                        .forward(45)
                         .build()));
 
-        sleep(5000);
+
+        //turn towards freights
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .turn(Math.toRadians(FREIGHT_HEADING - drivetrain.getPoseEstimate().getHeading()))
+                        .build()
+        ));
+
+        DriveTillIntake driveTillIntake = new DriveTillIntake(robot, robot.mecanumDrive,
+                new Pose2d(0.2,0, Math.toRadians(0)),
+                10);
+        robot.runCommand(driveTillIntake);
 
         od.close();
 

@@ -37,13 +37,13 @@ public class Red extends LinearOpMode {
     public static double DUCK_X = -5.7;
     public static double DUCK_Y = 22.5;
     public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -21.14; //-21;
-    public static double HUB_Y= -13.09; //1.5; //-25.87;
-    public static double HUB_1X= -22.5; //-21;
-    public static double HUB_1Y= -12.75; //1.5; //-25.87;
-    public static double HUB_HEADING= Math.PI+Math.toRadians(28);//1.14;
-    public static double FINAL_HEADING= 60;
-    public static double FREIGHT_HEADING= -45;
+    public static double HUB_X= -20; //-21;
+    public static double HUB_Y= -12; //1.5; //-25.87;
+    public static double HUB_1X= -21; //-21;
+    public static double HUB_1Y= -11; //1.5; //-25.87;
+    public static double HUB_HEADING= Math.PI+ 0.4;//Math.toRadians(25);//1.14;
+    public static double FINAL_HEADING= 62;
+    public static double FREIGHT_HEADING= -30;
 
     private int adjPos(int Pos){
         return (Pos);

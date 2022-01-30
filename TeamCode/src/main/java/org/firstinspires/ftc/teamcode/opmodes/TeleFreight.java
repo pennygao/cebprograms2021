@@ -168,11 +168,11 @@ public class  TeleFreight  extends LinearOpMode {
                 redToggleSpin = !redToggleSpin;
             }
             if (blueToggleSpin) {
-                robot.spinner.setPower(0.8);
+                robot.spinner.setPower(0.55);
                 Log.i("duckSpin", "spinning blue");
             }
             else if (redToggleSpin) {
-                robot.spinner.setPower(-0.8);
+                robot.spinner.setPower(-0.6);
                 Log.i("duckSpin", "spinning red");
             }
             else {

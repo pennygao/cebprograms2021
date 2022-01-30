@@ -34,21 +34,21 @@ public class BlueDuckStorage extends LinearOpMode {
     public static double SCAN_BACKWARD = 1;
     public static double SCAN_RIGHT = 10;
     public static double DUCK_X = -3;
-    public static double DUCK_Y = 20;
-    public static double DUCK_HEADING = Math.toRadians(45); // degree
-    public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -27; //-20.1 ;
-    public static double HUB_Y= -6; //0.5
-    public static double HUB_2X=-25;
-    public static double HUB_2Y= -6;
-    public static double HUB_1X= -24; //-21;
-    public static double HUB_1Y= -5.5; //1.5; //-25.87;
+    public static double DUCK_Y = 21;
+    public static double DUCK_HEADING = Math.toRadians(42); // degree
+    public static double DUCK_BUF = 5;
+    public static double HUB_X= -25; //-20.1 ;
+    public static double HUB_Y= -4; //0.5
+    public static double HUB_2X=-22;
+    public static double HUB_2Y= -3;
+    public static double HUB_1X= -22; //-21;
+    public static double HUB_1Y= -3; //1.5; //-25.87;
     public static double HUB_HEADING= Math.toRadians(180+45);; //1.14;
     public static double FINAL_HEADING= 43;
     public static double DUCK_LEFT_THRESHOLD = 750;
     public static boolean GO_TO_WAREHOUSE = false;
     public static double TO_STORAGE_DIS = 28;
-    public static double TO_STORAGE_RIGHT = -5;
+    public static double TO_STORAGE_RIGHT = -8;
 
     private int elementPos = 3; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
     @Override

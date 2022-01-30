@@ -37,10 +37,10 @@ public class Blue extends LinearOpMode {
     public static double DUCK_X = -5.7;
     public static double DUCK_Y = 22.5;
     public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -26; //-21;
-    public static double HUB_Y= 16.08; //1.5; //-25.87;
-    public static double HUB_1X= -25; //-21;
-    public static double HUB_1Y= 15; //1.5; //-25.87;
+    public static double HUB_X= -23; //-21;
+    public static double HUB_Y= 14; //1.5; //-25.87;
+    public static double HUB_1X= -23; //-21;
+    public static double HUB_1Y= 13; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + 5.7; //1.14;
     public static double FINAL_HEADING= -55; //125 + 180;
     public static double FREIGHT_HEADING= 45; //125 + 90;
@@ -110,7 +110,7 @@ public class Blue extends LinearOpMode {
         // TODO: Back 3 inches
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(8)
+                        .forward(9)
                         .build()));
 
         // TODO: Turn towards warehouse

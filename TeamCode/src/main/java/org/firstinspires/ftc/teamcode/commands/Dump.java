@@ -27,7 +27,7 @@ public class Dump implements Command {
         outtake.setDefault(level);
         outtake.dump();
         outtake.setServoPosition(0.61);
-        intake.setTargetPosition(Intake.Positions.DUMP);
+        intake.setTargetPosition(Intake.Positions.LIFT);
         startTime = NanoClock.system().seconds();
         robot.update();
     }

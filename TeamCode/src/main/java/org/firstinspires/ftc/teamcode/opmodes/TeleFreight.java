@@ -26,7 +26,7 @@ public class  TeleFreight  extends LinearOpMode {
 
 //RESETS
         robot.intake.setTargetPosition(Intake.Positions.RESET);
-        robot.outtake.setServoPosition(0.6);
+        robot.outtake.setServoPosition(0.8);
         robot.outtake.setArmPosition(0.0);
 
         waitForStart();
@@ -168,11 +168,11 @@ public class  TeleFreight  extends LinearOpMode {
                 redToggleSpin = !redToggleSpin;
             }
             if (blueToggleSpin) {
-                robot.spinner.setPower(0.55);
+                robot.spinner.setPower(0.5);
                 Log.i("duckSpin", "spinning blue");
             }
             else if (redToggleSpin) {
-                robot.spinner.setPower(-0.6);
+                robot.spinner.setPower(-0.5);
                 Log.i("duckSpin", "spinning red");
             }
             else {

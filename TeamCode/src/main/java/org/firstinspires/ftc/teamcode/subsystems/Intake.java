@@ -22,7 +22,7 @@ public class Intake implements Subsystem {
     private boolean prevFreightState;
     private boolean freightState;
     private boolean isFreightIn;
-    private static final double TICKS_PER_REV = 4592; // 28 * 164=4592
+    private static final double TICKS_PER_REV = 3500; // 28 * 125=3500
 
     //PID Stuff
     final private PIDFController armPID;

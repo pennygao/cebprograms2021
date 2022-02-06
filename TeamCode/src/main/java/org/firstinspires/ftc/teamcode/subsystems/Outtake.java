@@ -27,10 +27,12 @@ public class Outtake implements Subsystem {
     private Servo dumpServo;
     public Servo armServo;
     private double armServoPosition = 0;
-    private double dumpServoPosition = 0;
+    private double dumpServoPosition = 0.8;
     private int dumpState = 0;
     private double servoTime;
     private double dumpTime = 1.5;
+    private double dumpStartPos = 0.5                               ;
+    private double dumpEndPos = 0.8;
 
     public enum slide_state {
         LEVEL_0,
@@ -135,7 +137,7 @@ public class Outtake implements Subsystem {
                 if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= Configuration.SLIDER_ACCEPTABLE_ERROR_TICKS){ //it should be around 1/8 of an inch
                     Log.i("dumpState", "ending 1: "
                             + slideMotor.getCurrentPosition() + " " + targetPosition);
-                    setServoPosition(0.25);
+                    setServoPosition(dumpStartPos);
                     dumpState++;
                     servoTime = NanoClock.system().seconds();
                     Log.i("servoTime", "1: " + servoTime
@@ -152,7 +154,7 @@ public class Outtake implements Subsystem {
                 if (NanoClock.system().seconds() - servoTime >= 1){// FIXME Yujie
                     Log.i("dumpState", "ending 2 " +
                             dumpServo.getPosition() + " " + dumpServoPosition);
-                    setServoPosition(0.6);
+                    setServoPosition(dumpEndPos);
                     dumpState++;
                     Log.i("servoTime", "servo 2:"+NanoClock.system().seconds());
                     servoTime = NanoClock.system().seconds();

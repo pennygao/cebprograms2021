@@ -27,8 +27,8 @@
     private DcMotorEx[] motors = new DcMotorEx[4];
     private CachingSensor<Float> headingSensor;
 
-    private DistanceSensor distL;// = robot.get//hardwareMap.get(DistanceSensor.class, "distanceL");
-    private DistanceSensor distR; // = hardwareMap.get(DistanceSensor.class, "distanceR");
+//    private DistanceSensor distL;// = robot.get//hardwareMap.get(DistanceSensor.class, "distanceL");
+//    private DistanceSensor distR; // = hardwareMap.get(DistanceSensor.class, "distanceR");
 
      //PID Stuff
      private PIDFController hubPID;
@@ -71,8 +71,8 @@
         }
 
         // distance related
-        distL = robot.getDistanceSensor("distanceL");
-        distR = robot.getDistanceSensor("distanceR");
+        //distL = robot.getDistanceSensor("distanceL");
+        //distR = robot.getDistanceSensor("distanceR");
         hubPID = new PIDFController(HUB_PID_COEFFICIENTS);
         hubPID.setOutputBounds(-0.5, 0.5);
 
@@ -105,10 +105,10 @@
     }
 
     // implement getDistL(), return distance in mm
-     public double getdistL() {return distL.getDistance(DistanceUnit.MM);}
+     //public double getdistL() {return distL.getDistance(DistanceUnit.MM);}
 
     // implement getDistR(), return distance in mm
-    public double getdistR() {return distR.getDistance(DistanceUnit.MM);}
+    //public double getdistR() {return distR.getDistance(DistanceUnit.MM);}
 
     public void setTargetDist(double targetDist) {
         hubPID.reset();
@@ -124,7 +124,7 @@
     }
 
     public boolean getInAlignMode() { return this.inAlignMode;}
-
+/*
      private void moveToHub() {
          double hubPower; // = hubPID.update((getdistL()+ getdistR())/2);
          double turnPower;
@@ -134,6 +134,8 @@
          turnPower = turnPID.update(Math.atan((getdistL() - getdistR())/152.4));
          setDrivePower(new Pose2d (hubPower, 0, turnPower));
      }
+
+ */
 
      public boolean hubReached() {
          return ((Math.abs(getDistPIDError())) <= HUB_ACCEPTABLE_ERROR_MARGIN);
@@ -149,7 +151,7 @@
     @Override
     public void update(TelemetryPacket packet) {
         if (inAlignMode) {
-            moveToHub();
+            //moveToHub();
         }
 
         for (int i = 0; i < 4; i++){

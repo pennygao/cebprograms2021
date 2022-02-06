@@ -27,7 +27,6 @@ public class  TeleFreight  extends LinearOpMode {
 //RESETS
         robot.intake.setTargetPosition(Intake.Positions.RESET);
         robot.outtake.setServoPosition(0.8);
-        robot.outtake.setArmPosition(0.0);
 
         waitForStart();
 

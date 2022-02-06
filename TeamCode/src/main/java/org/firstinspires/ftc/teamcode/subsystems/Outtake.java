@@ -25,8 +25,6 @@ public class Outtake implements Subsystem {
     private int targetPosition = 0;
     private Telemetry telemetry;
     private Servo dumpServo;
-    public Servo armServo;
-    private double armServoPosition = 0;
     private double dumpServoPosition = 0.8;
     private int dumpState = 0;
     private double servoTime;
@@ -44,7 +42,6 @@ public class Outtake implements Subsystem {
         this.telemetry = telemetry;
         dumpServo = robot.getServo("dumpServo");
         slideMotor = robot.getMotor("slide");
-        armServo = robot.getServo("armServo");
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidePower = 1;
@@ -59,9 +56,6 @@ public class Outtake implements Subsystem {
     public void setServoPosition(double position) {
         this.dumpServoPosition = position;
         // set encode to new position
-    }
-    public void setArmPosition(double position){
-        this.armServoPosition = position;
     }
 
     public void setPower (double power ){
@@ -128,7 +122,6 @@ public class Outtake implements Subsystem {
     @Override
     public void update(TelemetryPacket packet) {
 
-        armServo.setPosition(armServoPosition);
         switch (dumpState){
             case 0:
                 dumpServo.setPosition(dumpServoPosition);

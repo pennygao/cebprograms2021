@@ -45,12 +45,12 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
     public static final double MAX_RPM = 312;
 
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(30, 0, 15, 15);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(25, 5, 5, 15);
             //getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     public static double WHEEL_RADIUS = 2.99; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15.95; // in
+    public static double TRACK_WIDTH = 10.5; // in
     //however, we changed it to 15.95 after some testing to make things more accurate. idk how it works but it did.
 
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
@@ -62,8 +62,8 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
     public static double MAX_ANG_VEL = Math.toRadians(60);
     public static double MAX_ANG_ACCEL = Math.toRadians(60);
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(5.0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5.0, 0, 0);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0,0); //5.0, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0.0, 0, 0); //5.0,0,0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -309,7 +309,7 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
         leftFront.setPower(v);
         leftRear.setPower(v1);
         rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        rightFront.setPower(-v3);
     }
 
 

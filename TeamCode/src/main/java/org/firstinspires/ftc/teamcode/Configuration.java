@@ -7,7 +7,7 @@ public class Configuration {
     public static final double INTAKE_ANGLE_RESET = 0.0;
 
     public static final double SLIDER_FIRST_HEIGHT_INCHES = 3.0;
-    public static final double SLIDER_SECOND_HEIGHT_INCHES = 7.0;
+    public static final double SLIDER_SECOND_HEIGHT_INCHES = 8.0;
     public static final double SLIDER_THIRD_HEIGHT_INCHES = 14;
 
     public static final double SLIDER_ACCEPTABLE_ERROR_TICKS = 14;

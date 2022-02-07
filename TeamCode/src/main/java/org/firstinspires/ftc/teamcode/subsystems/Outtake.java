@@ -29,8 +29,8 @@ public class Outtake implements Subsystem {
     private int dumpState = 0;
     private double servoTime;
     private double dumpTime = 1.5;
-    private double dumpStartPos = 0.5                               ;
-    private double dumpEndPos = 0.8;
+    private double dumpStartPos = 0.5;                               ;
+    private double dumpEndPos = 0.9;
 
     public enum slide_state {
         LEVEL_0,
@@ -42,6 +42,7 @@ public class Outtake implements Subsystem {
         this.telemetry = telemetry;
         dumpServo = robot.getServo("dumpServo");
         slideMotor = robot.getMotor("slide");
+        slideMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slidePower = 1;

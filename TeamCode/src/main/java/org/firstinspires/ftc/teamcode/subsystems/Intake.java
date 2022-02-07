@@ -23,6 +23,7 @@ public class Intake implements Subsystem {
     private boolean freightState;
     private boolean isFreightIn;
     private static final double TICKS_PER_REV = 3500; // 28 * 125=3500
+    private double sweepPower = 0.85;
 
     //PID Stuff
     final private PIDFController armPID;
@@ -39,7 +40,7 @@ public class Intake implements Subsystem {
 
     public Intake(Robot robot) {
         armMotor = robot.getMotor("armMotor");
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         colorSensor =robot.getColorSensor("color");
 
         armPID = new PIDFController(ARM_PID_COEFFICIENTS);
@@ -58,13 +59,13 @@ public class Intake implements Subsystem {
     }
     public void start() {
         setTargetPosition(Positions.INTAKE);
-        sweepMotor.setPower(-0.6);
+        sweepMotor.setPower(sweepPower);
         Log.i("intake", targetReached() +
                 " " + getArmAngle() + " " + armMotor.getCurrentPosition());
     }
     public void stop() {
         setTargetPosition(Positions.DUMP);
-        sweepMotor.setPower(-1.4);
+        sweepMotor.setPower(1.4);
     }
     public void reset() {
         sweepMotor.setPower(0.0);

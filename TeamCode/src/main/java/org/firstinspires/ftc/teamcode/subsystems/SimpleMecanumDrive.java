@@ -85,7 +85,7 @@
         powers[1] = drivePower.getX() + drivePower.getY() - drivePower.getHeading();
 
         powers[2] = drivePower.getX() - drivePower.getY() + drivePower.getHeading();
-        powers[3] = -(drivePower.getX() + drivePower.getY() + drivePower.getHeading());
+        powers[3] = drivePower.getX() + drivePower.getY() + drivePower.getHeading() ;
     }
     public void setPowerFactor(double factor){
         this.powerFactor=factor;

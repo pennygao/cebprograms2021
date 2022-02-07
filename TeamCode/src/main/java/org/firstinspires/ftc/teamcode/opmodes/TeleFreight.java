@@ -21,6 +21,8 @@ public class  TeleFreight  extends LinearOpMode {
         boolean slowMode = false;
         boolean blueToggleSpin = false;
         boolean redToggleSpin = false;
+        double gamepadDuckPower=0;
+        double duckPower = 0;
         int intakeMode = 0; //toggle between 0(at rest), 1(go down) 2(dump)
 
 
@@ -149,21 +151,12 @@ public class  TeleFreight  extends LinearOpMode {
 //DUCK SPINNER
             //blue = right; red = left
             /*
-            if (robot.userInput.buttonPressed(1, "left_bumper")){
-                //toggleSpin = !toggleSpin;
-                robot.spinner.setPower(0.65);
-                Log.i("duckSpin", "spinning");
-            }
-            else if (robot.userInput.buttonPressed(1, "right_bumper")){
-                //toggleSpin = !toggleSpin;
-                robot.spinner.setPower(0.0);
-                Log.i("duckSpin", "not spinning");
-            }
-             */
-            if (robot.userInput.buttonPressed(1, "right_bumper")) {
+            if (robot.userInput.buttonPressed(1, "right_trigger")) {
+                duckPower = gamepad1.right_trigger;
                 blueToggleSpin = !blueToggleSpin;
             }
-            else if (robot.userInput.buttonPressed(1, "left_bumper")) {
+            else if (robot.userInput.buttonPressed(1, "left_trigger")) {
+                duckPower = gamepad1.left_trigger;
                 redToggleSpin = !redToggleSpin;
             }
             if (blueToggleSpin) {
@@ -178,7 +171,16 @@ public class  TeleFreight  extends LinearOpMode {
                 robot.spinner.setPower(0);
                 Log.i("duckSpin", "not spinning");
             }
-
+             */
+            //read time
+            /*
+            if (currentTime - previuosTime > )
+                increase power by how much time elapsed up to the maxDuckPower determined by
+                save currentTime
+            */
+            gamepadDuckPower = gamepad1.right_trigger - gamepad1.left_trigger;
+            robot.spinner.setPower(gamepadDuckPower*0.8);
+            Log.i("duckSpinner", "gamepad power: "+gamepadDuckPower);
             telemetry.update();
         }
     }

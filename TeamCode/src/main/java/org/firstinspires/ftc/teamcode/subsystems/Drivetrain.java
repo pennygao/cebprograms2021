@@ -309,7 +309,7 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
         leftFront.setPower(v);
         leftRear.setPower(v1);
         rightRear.setPower(v2);
-        rightFront.setPower(-v3);
+        rightFront.setPower(v3);
     }
 
 

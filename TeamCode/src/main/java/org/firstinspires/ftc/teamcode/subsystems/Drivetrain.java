@@ -50,7 +50,7 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
 
     public static double WHEEL_RADIUS = 2.99; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 9.3; // 10.92 in
+    public static double TRACK_WIDTH = 10.0; // 10.92 in
     //however, we changed it to 15.95 after some testing to make things more accurate. idk how it works but it did.
 
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
@@ -116,7 +116,8 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
+                new Pose2d(1, 1, Math.toRadians(5.0)), 0.2);
+                //new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
         batteryVoltageSensor = robot.getVoltageSensor();
 

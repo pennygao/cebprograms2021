@@ -37,16 +37,17 @@ public class Blue extends LinearOpMode {
     public static double DUCK_X = -5.7;
     public static double DUCK_Y = 22.5;
     public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -23; //-21;
-    public static double HUB_Y= 14; //1.5; //-25.87;
-    public static double HUB_1X= -23; //-21;
-    public static double HUB_1Y= 13; //1.5; //-25.87;
-    public static double HUB_HEADING= Math.PI + 5.7; //1.14;
-    public static double FINAL_HEADING= -55; //125 + 180;
-    public static double FREIGHT_HEADING= 45; //125 + 90;
+    public static double HUB_X= -26.5; //-21;
+    public static double HUB_Y= 17; //1.5; //-25.87;
+    public static double HUB_1X= -25.5; //-21;
+    public static double HUB_1Y= 16; //1.5; //-25.87;
+    public static double HUB_HEADING= Math.PI + 5.4; //1.14;
+    public static double FINAL_HEADING= -45; //125 + 180;
+    public static double FREIGHT_HEADING= 50; //125 + 90;
 
 
-    private int elementPos = 3; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
+
+    //private int elementPos = 3; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
     @Override
     public void runOpMode() throws InterruptedException {
         int elementPos = 3;
@@ -64,7 +65,6 @@ public class Blue extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        robot.outtake.setServoPosition(0.60);
         robot.intake.setTargetPosition(Intake.Positions.DUMP);
         robot.update();
 
@@ -93,12 +93,12 @@ public class Blue extends LinearOpMode {
                     .splineTo(new Vector2d(HUB_X, HUB_Y), HUB_HEADING)
                     .build();
         }
-        /*
+
         Trajectory traj_forward = drivetrain.trajectoryBuilder(new Pose2d())
                 .forward(SCAN_FORWARD)
                 .build();
 
-         */
+
         // TODO: Dump to proper level
         robot.intake.setTargetPosition(Intake.Positions.DUMP);
         robot.update();
@@ -107,37 +107,19 @@ public class Blue extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectory(traj_hub));
         robot.runCommand(dumpL);
 
-        // TODO: Back 3 inches
+        // Go to WH
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(9)
+                        .forward(9) // Back 9 inches
+                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading())) // Turn to WH
+                        .forward(45) // Go to WH
+                        .turn(Math.toRadians(FREIGHT_HEADING - drivetrain.getPoseEstimate().getHeading())) // Turn to freight
                         .build()));
 
-        // TODO: Turn towards warehouse
-        //turn
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .build()
-        ));
-
-        // TODO: GO to warehouse
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .forward(45)
-                        .build()));
-
-
-        //turn towards freights
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .turn(Math.toRadians(FREIGHT_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .build()
-        ));
-
+        // Pick
         DriveTillIntake driveTillIntake = new DriveTillIntake(robot, robot.mecanumDrive,
                 new Pose2d(0.2,0, Math.toRadians(0)),
-                10);
+                4);
         robot.runCommand(driveTillIntake);
 
         od.close();

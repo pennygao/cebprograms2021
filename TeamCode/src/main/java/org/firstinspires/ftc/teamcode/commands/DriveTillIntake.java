@@ -12,7 +12,7 @@ public class DriveTillIntake implements Command {
     SimpleMecanumDrive mecanumDrive;
     NanoClock clock;
     Pose2d drivePower;
-    double initialTimeStamp;
+    double initialTimeStamp, intakeCompleteTime;
     double driveTime;
 
     public DriveTillIntake (CrabRobot robot, SimpleMecanumDrive drive, Pose2d power, double time){
@@ -32,6 +32,7 @@ public class DriveTillIntake implements Command {
     @Override
     public void update() {
         if (robot.intake.checkFreightIn()) {
+            intakeCompleteTime = clock.seconds();
             robot.intake.stop();
             mecanumDrive.setDrivePower(new Pose2d(0,0,0));
         }
@@ -40,11 +41,12 @@ public class DriveTillIntake implements Command {
     @Override
     public void stop() {
         mecanumDrive.setDrivePower(new Pose2d());
+        robot.intake.reset();
     }
 
     @Override
     public boolean isCompleted() {
-        double currentTime=clock.seconds()-initialTimeStamp;
-        return (currentTime>=driveTime); // || robot.intake.checkFreightIn());
+        double currTime=clock.seconds();
+        return (currTime - initialTimeStamp >=driveTime); // || currTime - intakeCompleteTime >= 1);
     }
 }

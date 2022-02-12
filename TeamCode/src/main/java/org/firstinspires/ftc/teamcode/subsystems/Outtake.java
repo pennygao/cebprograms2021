@@ -25,12 +25,13 @@ public class Outtake implements Subsystem {
     private int targetPosition = 0;
     private Telemetry telemetry;
     private Servo dumpServo;
-    private double dumpServoPosition = 0.8;
+    //private double dumpInitPos = 0.8; //0.8;
     private int dumpState = 0;
     private double servoTime;
-    private double dumpTime = 1.5;
-    private double dumpStartPos = 0.5;                               ;
-    private double dumpEndPos = 0.9;
+    private double dumpTime = 1.0; //second
+    private double dumpRstTime = 0.5; //second
+    private double dumpPos = 0.45;     //0.5                          ;
+    private double dumpInitPos = 0.8; //0.8; //0.9
 
     public enum slide_state {
         LEVEL_0,
@@ -55,7 +56,7 @@ public class Outtake implements Subsystem {
     }
 
     public void setServoPosition(double position) {
-        this.dumpServoPosition = position;
+        this.dumpInitPos = position;
         // set encode to new position
     }
 
@@ -117,7 +118,7 @@ public class Outtake implements Subsystem {
     }
 
     public boolean dumpDone() {
-        return (dumpState == 0);
+        return (dumpState == 0 || dumpState >= 3);
     }
 
     @Override
@@ -125,13 +126,13 @@ public class Outtake implements Subsystem {
 
         switch (dumpState){
             case 0:
-                dumpServo.setPosition(dumpServoPosition);
+                dumpServo.setPosition(dumpInitPos);
                 break;
             case 1: //moving slide up
                 if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= Configuration.SLIDER_ACCEPTABLE_ERROR_TICKS){ //it should be around 1/8 of an inch
                     Log.i("dumpState", "ending 1: "
                             + slideMotor.getCurrentPosition() + " " + targetPosition);
-                    setServoPosition(dumpStartPos);
+                    dumpServo.setPosition(dumpPos);
                     dumpState++;
                     servoTime = NanoClock.system().seconds();
                     Log.i("servoTime", "1: " + servoTime
@@ -141,37 +142,42 @@ public class Outtake implements Subsystem {
                     slideMotor.setPower(slidePower);
                     slideMotor.setTargetPosition(targetPosition);
                     slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    dumpServo.setPosition(dumpInitPos);
                     Log.i("dumpState", "on 1: ");
                 }
                 break;
-            case 2: //dumping servo
-                if (NanoClock.system().seconds() - servoTime >= 1){// FIXME Yujie
+            case 2: //dumping
+                if (NanoClock.system().seconds() - servoTime >= dumpTime){// FIXME Yujie
                     Log.i("dumpState", "ending 2 " +
-                            dumpServo.getPosition() + " " + dumpServoPosition);
-                    setServoPosition(dumpEndPos);
+                            dumpServo.getPosition() + " " + dumpInitPos);
+                    dumpServo.setPosition(dumpInitPos);
                     dumpState++;
                     Log.i("servoTime", "servo 2:"+NanoClock.system().seconds());
                     servoTime = NanoClock.system().seconds();
                 }
                 else {
-                    dumpServo.setPosition(dumpServoPosition);
+                    dumpServo.setPosition(dumpPos);
                     Log.i("dumpState", "on 2: ");
                 }
                 break;
-            case 3:
-                if (NanoClock.system().seconds() - servoTime >= dumpTime){
+
+            case 3: // dump servo reset
+                if (NanoClock.system().seconds() - servoTime >= dumpRstTime){
                     Log.i("dumpState", "ending 3 " +
-                            dumpServo.getPosition() + " " + dumpServoPosition);
+                            dumpServo.getPosition() + " " + dumpInitPos);
                     targetPosition = 0;
                     dumpState++;
+                    //dumpServo.setPosition(dumpInitPos);
                     Log.i("servoTime", "servo 3:"+NanoClock.system().seconds());
                     servoTime = NanoClock.system().seconds();
                 }
                 else {
-                    dumpServo.setPosition(dumpServoPosition);
+                    dumpServo.setPosition(dumpInitPos);
                 }
                 Log.i("dumpState", "on 2: ");
                 break;
+
+
             case 4: // slide going down
                 if (Math.abs(slideMotor.getCurrentPosition()-targetPosition) <= 1){ //what do i do here?
                     Log.i("dumpState", "ending 4");

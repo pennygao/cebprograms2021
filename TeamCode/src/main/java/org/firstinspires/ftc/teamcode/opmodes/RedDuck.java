@@ -65,32 +65,25 @@ public class RedDuck extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        robot.outtake.setServoPosition(0.60);
-        robot.intake.setTargetPosition(Intake.Positions.DUMP);
+        robot.intake.setTargetPosition(Intake.Positions.LIFT);
         robot.update();
 
         elementPos = od.checkDuckPresence();
         //telemetry.addData("Level:", elementPos);
         //telemetry.update();
 
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .forward(-10)
-                        .build()
-        ));
-
         // move to spinners
         Trajectory traj_duck = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                 .splineTo(new Vector2d(DUCK_X, DUCK_Y), DUCK_HEADING)
                 .build();
 
-        robot.runCommand(drivetrain.followTrajectory(traj_duck));
-
-        Trajectory traj_duck_back = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-                .forward(DUCK_BUF)
-                .build();
-
-        robot.runCommand(drivetrain.followTrajectory(traj_duck_back));
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .forward(-10)
+                        .addTrajectory(traj_duck)
+                        .forward(DUCK_BUF)
+                        .build()
+        ));
 
         double spinPower = -0.5;
         driveTime = 3;
@@ -119,25 +112,21 @@ public class RedDuck extends LinearOpMode {
 
 
 
-        //go back slightly
+        //GO to warehouse
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .forward(5)
+                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
+                        .forward(80)
                         .build()));
 
-        //turn
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .build()
-        ));
 
         if (GO_TO_WAREHOUSE){
             ////////////// TO WAREHOUSE //////////////
             //move to warehouse
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(80)
+
                             .build()
             ));
 

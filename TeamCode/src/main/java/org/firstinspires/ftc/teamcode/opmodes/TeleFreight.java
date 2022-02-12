@@ -80,12 +80,12 @@ public class  TeleFreight  extends LinearOpMode {
                     intakeMode = 0;
                 }
                 else intakeMode++;
-                if (intakeMode == 1){
+                if (intakeMode == 1){// start intake
                     robot.intake.start();
                     slowMode = true;
                     telemetry.addLine("in buttonX loop " + intakeMode);
                 }
-                if (intakeMode == 2 ){
+                if (intakeMode == 2 ){ // stop intake
                     robot.intake.stop();
                     telemetry.addLine("enter transfer " + intakeMode);
                 }

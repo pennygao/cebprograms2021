@@ -33,22 +33,22 @@ public class BlueDuckStorage extends LinearOpMode {
     public static double SCAN_FORWARD = -4;
     public static double SCAN_BACKWARD = 1;
     public static double SCAN_RIGHT = 10;
-    public static double DUCK_X = -3;
-    public static double DUCK_Y = 21;
-    public static double DUCK_HEADING = Math.toRadians(42); // degree
-    public static double DUCK_BUF = 5;
-    public static double HUB_X= -25; //-20.1 ;
-    public static double HUB_Y= -4; //0.5
-    public static double HUB_2X=-22;
-    public static double HUB_2Y= -3;
-    public static double HUB_1X= -22; //-21;
-    public static double HUB_1Y= -3; //1.5; //-25.87;
-    public static double HUB_HEADING= Math.toRadians(180+45);; //1.14;
+    public static double DUCK_X = -5;
+    public static double DUCK_Y = 25;
+    public static double DUCK_HEADING = Math.toRadians(39); // degree
+    public static double DUCK_BUF = 10.5;
+    public static double HUB_X= -28; //-20.1 ;
+    public static double HUB_Y= -7; //0.5
+    public static double HUB_2X=-27.5;
+    public static double HUB_2Y= -8.5;
+    public static double HUB_1X= -25; //-21;
+    public static double HUB_1Y= -6; //1.5; //-25.87;
+    public static double HUB_HEADING= Math.toRadians(180+40);; //1.14;
     public static double FINAL_HEADING= 43;
     public static double DUCK_LEFT_THRESHOLD = 750;
     public static boolean GO_TO_WAREHOUSE = false;
-    public static double TO_STORAGE_DIS = 28;
-    public static double TO_STORAGE_RIGHT = -8;
+    public static double TO_STORAGE_DIS = 33;
+    public static double TO_STORAGE_RIGHT = -10;
 
     private int elementPos = 3; // 1: LEFT/LOW, 2: MIDDLE/MID, 3: RIGHT/HI
     @Override
@@ -68,32 +68,25 @@ public class BlueDuckStorage extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        robot.outtake.setServoPosition(0.60);
         robot.intake.setTargetPosition(Intake.Positions.DUMP);
         robot.update();
 
         elementPos = od.checkDuckPresence();
-
-        //move forward a little bit
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .forward(-5)
-                        .build()
-        ));
 
         // move to spinners
         Trajectory traj_duck = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                 .splineTo(new Vector2d(DUCK_X, DUCK_Y), DUCK_HEADING)
                 .build();
 
-        robot.runCommand(drivetrain.followTrajectory(traj_duck));
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .forward(-5) //move forward a little bit
+                        .addTrajectory(traj_duck)
+                        .forward(DUCK_BUF)
+                        .build()
+        ));
 
-        Trajectory traj_duck_back = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-                .forward(DUCK_BUF)
-                .build();
-
-        robot.runCommand(drivetrain.followTrajectory(traj_duck_back));
-
+        // spinduck
         double spinPower = 0.5;
         driveTime = 2.5;
         Spin spinDuck = new Spin(robot.spinner,spinPower, driveTime);
@@ -129,39 +122,11 @@ public class BlueDuckStorage extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .forward(7)
+                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
+                        .forward(TO_STORAGE_DIS)
+                        .strafeRight(TO_STORAGE_RIGHT)
                         .build()));
 
-        //turn
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .build()
-        ));
-
-        if (GO_TO_WAREHOUSE) {
-            ////////////// TO WAREHOUSE //////////////
-            //move to warehouse
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(-90)
-                            .build()
-            ));
-
-
-        } else{
-            ////////////// TO STORAGE //////////////
-            //move to warehouse
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(TO_STORAGE_DIS)
-                            .build()
-            ));
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .strafeRight(TO_STORAGE_RIGHT)
-                            .build()
-            ));
-        }
 
 
         od.close();

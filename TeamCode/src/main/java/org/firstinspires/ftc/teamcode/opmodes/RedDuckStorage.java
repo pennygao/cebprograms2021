@@ -65,8 +65,7 @@ public class RedDuckStorage extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        robot.outtake.setServoPosition(0.60);
-        robot.intake.setTargetPosition(Intake.Positions.DUMP);
+        robot.intake.setTargetPosition(Intake.Positions.LIFT);
         robot.update();
 
         elementPos = od.checkDuckPresence();
@@ -76,21 +75,10 @@ public class RedDuckStorage extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .forward(-10)
+                        .splineTo(new Vector2d(DUCK_X, DUCK_Y), DUCK_HEADING)
+                        .forward(DUCK_BUF)
                         .build()
         ));
-
-        // move to spinners
-        Trajectory traj_duck = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-                .splineTo(new Vector2d(DUCK_X, DUCK_Y), DUCK_HEADING)
-                .build();
-
-        robot.runCommand(drivetrain.followTrajectory(traj_duck));
-
-        Trajectory traj_duck_back = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-                .forward(DUCK_BUF)
-                .build();
-
-        robot.runCommand(drivetrain.followTrajectory(traj_duck_back));
 
         double spinPower = -0.5;
         driveTime = 3;
@@ -118,46 +106,15 @@ public class RedDuckStorage extends LinearOpMode {
         robot.runCommand(dumpL);
 
 
-
-        //go back slightly
+        //GO to storage
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .forward(5)
+                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
+                        .forward(-30)
+                        .strafeRight(-4.5)
                         .build()));
 
-        //turn
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .build()
-        ));
-
-        if (GO_TO_WAREHOUSE){
-            ////////////// TO WAREHOUSE //////////////
-            //move to warehouse
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(80)
-                            .build()
-            ));
-
-        }else{
-            ////////////// TO STORAGE //////////////
-            //move to warehouse
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(-30)
-                            .build()
-            ));
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .strafeRight(-4.5)
-                            .build()
-            ));
-
-
-
-        }
 
         od.close();
 

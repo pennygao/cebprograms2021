@@ -30,7 +30,7 @@ public class Outtake implements Subsystem {
     private double servoTime;
     private double dumpTime = 1.0; //second
     private double dumpRstTime = 0.5; //second
-    private double dumpPos = 0.45;     //0.5                          ;
+    private double dumpPos = 0.4;     //0.5                          ;
     private double dumpInitPos = 0.8; //0.8; //0.9
 
     public enum slide_state {

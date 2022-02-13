@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.testing;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Configuration;
@@ -20,7 +20,7 @@ public class ArmclawTest_Ed extends LinearOpMode {
 
             robot.update();
 
-            telemetry.addData("armposition:", arm.getarmPosition());
+            telemetry.addData("armPosition:", arm.getarmPosition());
             if (Abutton) {
                 arm.setArmTargetPosition(Configuration.ARM_RESET);
 

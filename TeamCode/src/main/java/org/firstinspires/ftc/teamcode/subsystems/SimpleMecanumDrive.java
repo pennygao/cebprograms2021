@@ -14,6 +14,7 @@
  import org.firstinspires.ftc.teamcode.hardware.CachingSensor;
  import org.firstinspires.ftc.teamcode.robot.Robot;
  import org.firstinspires.ftc.teamcode.robot.Subsystem;
+ import android.util.Log;
 
  public class SimpleMecanumDrive implements Subsystem {
      public double powerFactor = 0.5;
@@ -43,7 +44,8 @@
      private boolean inAlignMode = false;
      private double  targetDist = 0.0;
 
-
+     private double fastRobotTimeStamp;
+     private double powerSign = 1;
 
     private Double[] powers = {0.0, 0.0, 0.0, 0.0};
 
@@ -85,7 +87,26 @@
         powers[1] = drivePower.getX() + drivePower.getY() - drivePower.getHeading();
 
         powers[2] = drivePower.getX() - drivePower.getY() + drivePower.getHeading();
-        powers[3] = drivePower.getX() + drivePower.getY() + drivePower.getHeading() ;
+        powers[3] = drivePower.getX() + drivePower.getY() + drivePower.getHeading();
+
+
+        double time = System.nanoTime();
+        boolean robotIsFast = (time - fastRobotTimeStamp < 2000000000.0);
+        double averagePower = (powers[0] + powers[1] + powers[2] + powers[3])/4;
+        if (Math.abs(averagePower) > 0.75 && !robotIsFast){
+            fastRobotTimeStamp = System.nanoTime();
+            if (averagePower > 0){ powerSign = 1; }
+            else if (averagePower<0) {powerSign = -1;}
+        }
+        if (robotIsFast && (averagePower * powerSign < -0.75)){
+            powers[0] = 0.0;
+            powers[1] = 0.0;
+            powers[2] = 0.0;
+            powers[3] = 0.0;
+            robotIsFast = false;
+        }
+        Log.i("motor", "sign=" + powerSign + " robotIsFast? " + robotIsFast
+                + "; power: " + powers[0]);
     }
     public void setPowerFactor(double factor){
         this.powerFactor=factor;

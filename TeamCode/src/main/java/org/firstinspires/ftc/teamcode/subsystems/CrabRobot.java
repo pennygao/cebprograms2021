@@ -10,6 +10,7 @@ public class CrabRobot extends Robot {
     public final duckSpinner spinner;
     public final Intake intake;
     public final UserInput userInput;
+    public final ArmClaw arm;
     public CrabRobot(LinearOpMode opMode) {
         super(opMode);
         mecanumDrive = new SimpleMecanumDrive(this);
@@ -20,6 +21,8 @@ public class CrabRobot extends Robot {
         registerSubsystem(spinner);
         intake = new Intake(this);
         registerSubsystem(intake);
+        arm = new ArmClaw(this);
+        registerSubsystem(arm);
 
         userInput = new UserInput(opMode.gamepad1, opMode.gamepad2);
         registerSubsystem(userInput);

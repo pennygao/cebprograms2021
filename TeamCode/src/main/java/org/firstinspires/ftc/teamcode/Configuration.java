@@ -20,8 +20,8 @@ public class Configuration {
     public static final double CLAW_RESET = 0.01;
     public static final double ARMJOINT_RESET = 0.01;
 
-    public static final double ARM_GRAB = 0.85;
-    public static final double ARM_HOLD = 0.51;
+    public static final double ARM_GRAB = 0.95;
+    public static final double ARM_HOLD = 0.45;
     public static final double ARM_CAP = 0.60;
     public static final double CLAW_CLOSED = 0.0;
     public static final double CLAW_OPEN = 0.25;

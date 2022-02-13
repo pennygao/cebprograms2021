@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Configuration;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.UserInput;
@@ -19,11 +20,10 @@ public class  TeleFreight  extends LinearOpMode {
         boolean inTransfer = false;
         boolean isFreightIn = false;
         boolean slowMode = false;
-        boolean blueToggleSpin = false;
-        boolean redToggleSpin = false;
         double gamepadDuckPower=0;
         double duckPower = 0;
         int intakeMode = 0; //toggle between 0(at rest), 1(go down) 2(dump)
+        int clawModes = 0;
 
 
 //RESETS
@@ -32,6 +32,7 @@ public class  TeleFreight  extends LinearOpMode {
 
         waitForStart();
 
+        robot.arm.setArmTargetPosition(Configuration.ARM_RESET);
 
 //ENTER OP MODE LOOP
         while (!isStopRequested()) {
@@ -127,6 +128,7 @@ public class  TeleFreight  extends LinearOpMode {
             */
 
 //DUMP
+            /*
             if(leftBumper) {
                 int level = robot.outtake.getLevel();
                 double servoPosition=0.6;
@@ -145,7 +147,7 @@ public class  TeleFreight  extends LinearOpMode {
             if (rightBumper) {
                 robot.outtake.setServoPosition(0.6);
                 telemetry.addLine("resetting dumper");
-            }
+            }*/
 
 
 //DUCK SPINNER
@@ -182,6 +184,73 @@ public class  TeleFreight  extends LinearOpMode {
             robot.spinner.setPower(gamepadDuckPower*0.8);
             Log.i("duckSpinner", "gamepad power: "+gamepadDuckPower);
             telemetry.update();
+
+            //claw arm
+            /*
+            //version a
+            if (gamepad1.b) {
+                robot.arm.setArmTargetPosition(Configuration.ARM_RESET);
+                telemetry.addLine("Arm pos Reset");
+            }
+            if (gamepad1.x) {
+                robot.arm.setArmTargetPosition(Configuration.ARM_GRAB);
+                telemetry.addLine("Arm pos Reset");
+            }
+            if (gamepad1.y) {
+                //double servoarmPosition = 0.25;
+                robot.arm.setArmTargetPosition(Configuration.ARM_HOLD);
+                telemetry.addLine("Arm Pos Hold");
+                //  telemetry.addData("armposition5-B:", arm.getarmPosition());
+            }
+            if (gamepad1.left_bumper) {
+                robot.arm.setArmTargetPosition(Configuration.ARM_CAP);
+                telemetry.addLine("Arm Pos Placing");
+                telemetry.addData("armposition-C:", robot.arm.getarmPosition());
+            } */
+            //version b
+            boolean moveClaw = false;
+            if (robot.userInput.buttonPressed(1, "x")){
+                if (clawModes == 4){
+                    clawModes = 0;
+                }
+                else clawModes++;
+                moveClaw= true;
+            }
+            if (robot.userInput.buttonPressed(1, "b")){
+                if (clawModes == 0){
+                    clawModes = 4;
+                }
+                else clawModes--;
+                moveClaw = true;
+            }
+            if (moveClaw){
+                if (clawModes==0) {
+                    robot.arm.setArmTargetPosition(Configuration.ARM_RESET);
+                    telemetry.addLine("Arm pos Reset");
+                }
+                if (clawModes==1) {
+                    robot.arm.setArmTargetPosition(Configuration.ARM_GRAB);
+                    telemetry.addLine("Arm pos Reset");
+                }
+                if (clawModes==2) {
+                    robot.arm.setArmTargetPosition(Configuration.ARM_HOLD);
+                    telemetry.addLine("Arm Pos Hold");
+                    //  telemetry.addData("armposition-B:", arm.getarmPosition());
+                }
+                if (clawModes==3) {
+                    robot.arm.setArmTargetPosition(Configuration.ARM_CAP);
+                    telemetry.addLine("Arm Pos Placing");
+                    telemetry.addData("armposition-C:", robot.arm.getarmPosition());
+                }
+            }
+            if (gamepad1.left_bumper){
+                robot.arm.setArmTargetPosition(robot.arm.getarmPosition() - 0.01);
+            }
+            if (gamepad1.right_bumper){
+                robot.arm.setArmTargetPosition(robot.arm.getarmPosition() + 0.01);
+            }
+
+            Log.i("armClaw", "armposition: " + robot.arm.getarmPosition());
         }
     }
 }

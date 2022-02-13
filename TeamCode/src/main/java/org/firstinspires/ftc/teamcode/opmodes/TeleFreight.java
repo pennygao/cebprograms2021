@@ -27,7 +27,7 @@ public class  TeleFreight  extends LinearOpMode {
 
 
 //RESETS
-        robot.intake.setTargetPosition(Intake.Positions.RESET);
+        robot.intake.setTargetPosition(Intake.Positions.DUMP);
         robot.outtake.setServoPosition(0.8);
 
         waitForStart();
@@ -92,7 +92,6 @@ public class  TeleFreight  extends LinearOpMode {
                 }
                 if (intakeMode == 0){
                     robot.intake.reset();
-                    slowMode = false;
                     telemetry.addLine("transfer done " + intakeMode);
                 }
             }
@@ -116,38 +115,6 @@ public class  TeleFreight  extends LinearOpMode {
 
                 isAPressed = false;
             }
-            /*
-            if(buttonA) {
-                if (!isAPressed) {
-                    robot.outtake.dump();
-                    isAPressed = true;
-                }
-            } else {
-                isAPressed = false;
-            }
-            */
-
-//DUMP
-            /*
-            if(leftBumper) {
-                int level = robot.outtake.getLevel();
-                double servoPosition=0.6;
-                switch (level){
-                    case 1: servoPosition=0.25; //0.47 before fine-tune; hits the outer part of the tray
-                    break;
-                    case 2: servoPosition= 0.25;
-                    break;
-                    case 3: servoPosition= 0.30;
-                    break;
-                }
-                robot.outtake.setServoPosition(servoPosition);
-                telemetry.addLine("dumping  ");
-            }
-
-            if (rightBumper) {
-                robot.outtake.setServoPosition(0.6);
-                telemetry.addLine("resetting dumper");
-            }*/
 
 
 //DUCK SPINNER
@@ -244,10 +211,10 @@ public class  TeleFreight  extends LinearOpMode {
                 }
             }
             if (gamepad1.left_bumper){
-                robot.arm.setArmTargetPosition(robot.arm.getarmPosition() - 0.01);
+                robot.arm.setArmTargetPosition(robot.arm.getarmPosition() - 0.007);
             }
             if (gamepad1.right_bumper){
-                robot.arm.setArmTargetPosition(robot.arm.getarmPosition() + 0.01);
+                robot.arm.setArmTargetPosition(robot.arm.getarmPosition() + 0.007);
             }
 
             Log.i("armClaw", "armposition: " + robot.arm.getarmPosition());

@@ -50,7 +50,7 @@ public class BlueRepick extends LinearOpMode {
     public static double WALL_X = 0;
     public static double WALL_Y = 5;
     public static double WALL_HEADING = -90;
-    public static double WALL_FWD = 21;
+    public static double WALL_FWD = 24;
 
     public static double REPICK_X = -20;
     public static double REPICK_Y = -36;

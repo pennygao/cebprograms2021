@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 public class Configuration {
-    public static final double INTAKE_ANGLE_DOWN = -105.0;
+    public static final double INTAKE_ANGLE_DOWN = -120.0;
     public static final double INTAKE_ANGLE_DUMP = 13; //13;//-5.0
     public static final double INTAKE_ANGLE_LIFT = 3 ;
     public static final double INTAKE_ANGLE_RESET = 0.0;

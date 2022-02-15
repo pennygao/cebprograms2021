@@ -3,6 +3,8 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.LED;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -10,9 +12,14 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.Configuration;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 public class Outtake implements Subsystem {
+    //Level LED Definition
+    //Green = first level, red = second level, orange = third level
+    private LED LevelLEDRed;
+    private LED LevelLEDGreen;
     //Hardware: 1 motor, 1 encoder
     private DcMotorEx slideMotor;
     private double slidePower= 0;
@@ -27,11 +34,13 @@ public class Outtake implements Subsystem {
     private Servo dumpServo;
     //private double dumpInitPos = 0.8; //0.8;
     private int dumpState = 0;
+
     private double servoTime;
     private double dumpTime = 1.0; //second
     private double dumpRstTime = 0.5; //second
     private double dumpPos = 0.4;     //0.5                          ;
     private double dumpInitPos = 0.8; //0.8; //0.9
+    NanoClock clock;
 
     public enum slide_state {
         LEVEL_0,
@@ -43,6 +52,8 @@ public class Outtake implements Subsystem {
         this.telemetry = telemetry;
         dumpServo = robot.getServo("dumpServo");
         slideMotor = robot.getMotor("slide");
+        LevelLEDGreen = robot.getLED("green1");
+        LevelLEDRed = robot.getLED("red1");
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -79,9 +90,21 @@ public class Outtake implements Subsystem {
     4: go down
     */
     public void nextDefault() {
-        if (defaultLevel==3){ defaultLevel=1; }
-        else { defaultLevel++; }
+        if (defaultLevel==3){
+            defaultLevel=1;
+            LevelLEDRed.enableLight(true);
+            LevelLEDGreen.enableLight(false);}
+        else if(defaultLevel==1){
+            defaultLevel++;
+            LevelLEDRed.enableLight(false);
+            LevelLEDGreen.enableLight(true);}
+        else if(defaultLevel==2){
+            defaultLevel++;
+            LevelLEDRed.enableLight(true);
+            LevelLEDGreen.enableLight(true);
+        }
     }
+
 
     public void setDefault(int level) {
         defaultLevel = level;
@@ -92,16 +115,23 @@ public class Outtake implements Subsystem {
             switch (defaultLevel) {
                 case 1:
                     targetPosition = inchToTicks(Configuration.SLIDER_FIRST_HEIGHT_INCHES); //3.0 inches
+                    LevelLEDRed.enableLight(true);
+                    LevelLEDGreen.enableLight(false);
                     break;
                 case 2:
                     targetPosition = inchToTicks(Configuration.SLIDER_SECOND_HEIGHT_INCHES); //7.0
+                    LevelLEDRed.enableLight(false);
+                    LevelLEDGreen.enableLight(true);
                     break;
                 case 3:
                     targetPosition = inchToTicks(Configuration.SLIDER_THIRD_HEIGHT_INCHES); //11.0
+                    LevelLEDRed.enableLight(true);
+                    LevelLEDGreen.enableLight(true);
                 }
             dumpState++;
         }
     }
+
 
     public void goDown() {
         if (level > 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
@@ -123,7 +153,6 @@ public class Outtake implements Subsystem {
 
     @Override
     public void update(TelemetryPacket packet) {
-
         switch (dumpState){
             case 0:
                 dumpServo.setPosition(dumpInitPos);

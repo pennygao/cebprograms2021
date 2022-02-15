@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.LED;
 
 import org.firstinspires.ftc.teamcode.Configuration;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -12,10 +14,15 @@ import org.firstinspires.ftc.teamcode.subsystems.UserInput;
 import android.util.Log;
 @TeleOp
 public class  TeleFreight  extends LinearOpMode {
+    //Speed LED Definition
+    //Green = slow mode, red = fast mode
+    private LED SpeedLEDRed;
+    private LED SpeedLEDGreen;
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this);
-
+        SpeedLEDGreen = hardwareMap.get(LED.class, "green");
+        SpeedLEDRed = hardwareMap.get(LED.class, "red");
         boolean isAPressed = false;
         boolean inTransfer = false;
         boolean isFreightIn = false;
@@ -60,13 +67,20 @@ public class  TeleFreight  extends LinearOpMode {
 //                telemetry.addLine("slow mode");
                 Log.i("drivemode", "slow");
                 telemetry.addLine("Speed: Slow");
+
+                SpeedLEDGreen.enableLight(false);
+                SpeedLEDRed.enableLight(true);
             }
             else {
                 robot.mecanumDrive.setPowerFactor(0.8);
 //                telemetry.addLine("normie mode");
                 Log.i("drivemode", "normie");
                 telemetry.addLine("Speed: Normie");
+
+                SpeedLEDRed.enableLight(false);
+                SpeedLEDGreen.enableLight(true);
             }
+
 
 //INTAKE
             if(robot.intake.checkFreightIn()){
@@ -97,6 +111,7 @@ public class  TeleFreight  extends LinearOpMode {
             }
 
             telemetry.addData("Intake Mode: ", intakeMode);
+
 
 //SET SLIDE LEVEL
             if (robot.userInput.buttonPressed(2, "b")) {

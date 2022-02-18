@@ -41,6 +41,8 @@ public class Outtake implements Subsystem {
     private double dumpPos = 0.4;     //0.5                          ;
     private double dumpInitPos = 0.8; //0.8; //0.9
     NanoClock clock;
+    private double dumpUpPos = 0.7;
+
 
     public enum slide_state {
         LEVEL_0,
@@ -171,7 +173,7 @@ public class Outtake implements Subsystem {
                     slideMotor.setPower(slidePower);
                     slideMotor.setTargetPosition(targetPosition);
                     slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    dumpServo.setPosition(dumpInitPos);
+                    dumpServo.setPosition(dumpUpPos);
                     Log.i("dumpState", "on 1: ");
                 }
                 break;

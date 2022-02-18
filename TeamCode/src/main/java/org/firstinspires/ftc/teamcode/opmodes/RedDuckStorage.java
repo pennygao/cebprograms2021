@@ -33,17 +33,17 @@ public class RedDuckStorage extends LinearOpMode {
     public static double SCAN_FORWARD = -4;
     public static double SCAN_BACKWARD = 1;
     public static double SCAN_RIGHT = 10;
-    public static double DUCK_X = -8; //-2.93-
+    public static double DUCK_X = -5; //-2.93-
     public static double DUCK_Y = -15;//-11.9;
-    public static double DUCK_HEADING = Math.toRadians(290); // degree//305
-    public static double DUCK_BUF = 5;
-    public static double HUB_X= -22; //-21;
-    public static double HUB_Y= 15.5; //1.5; //-25.87;
-    public static double HUB_1X= -22.8;//-18.41; //-21;
-    public static double HUB_1Y= 14.2;//12.43; //1.5; //-25.87;
-    public static double HUB_HEADING= Math.PI + Math.toRadians(320); //1.14; //310
+    public static double DUCK_HEADING = -Math.toRadians(70); // degree//305
+    public static double DUCK_BUF = 16;
+    public static double HUB_X= -26.8; //-21;
+    public static double HUB_Y= 19.8; //1.5; //-25.87;
+    public static double HUB_1X= -25.5;//-18.41; //-21;
+    public static double HUB_1Y= 18.5;//12.43; //1.5; //-25.87;
+    public static double HUB_HEADING= Math.PI + Math.toRadians(-35); //1.14; //310
     public static double FINAL_HEADING= 130;
-    public static boolean GO_TO_WAREHOUSE = false;
+    public static boolean GO_TO_WAREHOUSE = true;
     public static double DUCK_LEFT_THRESHOLD = 750;
 
 
@@ -75,7 +75,8 @@ public class RedDuckStorage extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .forward(-10)
-                        .splineTo(new Vector2d(DUCK_X, DUCK_Y), DUCK_HEADING)
+                        .turn(DUCK_HEADING)
+                        //.splineTo(new Vector2d(DUCK_X, DUCK_Y), DUCK_HEADING)
                         .forward(DUCK_BUF)
                         .build()
         ));
@@ -105,14 +106,13 @@ public class RedDuckStorage extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectory(traj_hub));
         robot.runCommand(dumpL);
 
-
         //GO to storage
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .forward(5)
                         .turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .forward(-30)
-                        .strafeRight(-4.5)
+                        .forward(-38)
+                        .strafeLeft(15)
                         .build()));
 
 

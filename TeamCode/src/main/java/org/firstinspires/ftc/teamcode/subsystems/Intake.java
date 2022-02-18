@@ -33,6 +33,7 @@ public class Intake implements Subsystem {
 
     public enum Positions {
         RESET,
+        AUTO_INTAKE,
         INTAKE,
         DUMP,
         LIFT,
@@ -56,6 +57,12 @@ public class Intake implements Subsystem {
         armPID.reset();
         armPID.setTargetPosition(targetAngle);
         Log.i("intake", "angle set to "+targetAngle);
+    }
+    public void auto_start() {
+        setTargetPosition(Positions.AUTO_INTAKE);
+        sweepMotor.setPower(sweepPower);
+        Log.i("intake", targetReached() +
+                " " + getArmAngle() + " " + armMotor.getCurrentPosition());
     }
     public void start() {
         setTargetPosition(Positions.INTAKE);
@@ -83,6 +90,9 @@ public class Intake implements Subsystem {
                 break;
             case INTAKE:
                 setTargetAngle(Configuration.INTAKE_ANGLE_DOWN * Math.PI / 180);//-80 deg -> radians
+                break;
+            case AUTO_INTAKE:
+                setTargetAngle((Configuration.INTAKE_ANGLE_DOWN-5) * Math.PI / 180);//-80 deg -> radians
                 break;
             case DUMP:
                 setTargetAngle(Configuration.INTAKE_ANGLE_DUMP * Math.PI / 180);//-10 deg

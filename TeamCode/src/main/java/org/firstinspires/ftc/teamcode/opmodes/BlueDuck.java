@@ -41,8 +41,8 @@ public class BlueDuck extends LinearOpMode {
     public static double HUB_Y= -6.5; //0.5
     public static double HUB_2X=-27.5;
     public static double HUB_2Y= -8.5;
-    public static double HUB_1X= -25; //-21;
-    public static double HUB_1Y= -6; //1.5; //-25.87;
+    public static double HUB_1X= -26; //-21;
+    public static double HUB_1Y= -7; //1.5; //-25.87;
     public static double HUB_HEADING= Math.toRadians(180+40);; //1.14;
     public static double FINAL_HEADING= 43;
     public static double DUCK_LEFT_THRESHOLD = 750;
@@ -114,8 +114,14 @@ public class BlueDuck extends LinearOpMode {
         robot.update();
         Dump dumpL = new Dump(robot, elementPos);
 
-        robot.runCommand(drivetrain.followTrajectory(traj_hub));
-        robot.runCommand(dumpL);
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        //.splineTo(new Vector2d(REPICK_X, REPICK_Y), Math.toRadians(REPICK_HEADING))
+                        //.forward(-8)
+                        .addTrajectory(traj_hub)
+                        .addTemporalMarker(1.5, ()->robot.runCommand(dumpL))
+                        .build()));
+
 
         // Park in WH
         robot.runCommand(drivetrain.followTrajectorySequence(

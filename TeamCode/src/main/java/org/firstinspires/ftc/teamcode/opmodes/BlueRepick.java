@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 //import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Configuration;
 import org.firstinspires.ftc.teamcode.commands.DriveTillIntake;
 import org.firstinspires.ftc.teamcode.commands.Dump;
 //import org.firstinspires.ftc.teamcode.commands.Spin;
@@ -38,9 +39,9 @@ public class BlueRepick extends LinearOpMode {
     public static double DUCK_BUF = 2.0;
     public static double HUB_X= -27.5; //-21;
     public static double HUB_Y= 18; //1.5; //-25.87;
-    public static double HUB_1X= -26.5; //-21;
-    public static double HUB_1Y= 17; //1.5; //-25.87;
-    public static double HUB_HEADING= Math.PI - Math.toRadians(30) ; //+ 5.4; //5.7  //1.14;
+    public static double HUB_1X= -26; //-21;
+    public static double HUB_1Y= 16.5; //1.5; //-25.87;
+    public static double HUB_HEADING= Math.PI - Math.toRadians(25) ; //+ 5.4; //5.7  //1.14;
     public static double HUB_X_RD= -27; //-21;
     public static double HUB_Y_RD= 12; //1.5; //-25.87;
     public static double HUB_HEADING_RD= Math.PI + 5.0; //5.7  //1.14;
@@ -95,17 +96,17 @@ public class BlueRepick extends LinearOpMode {
                     .build();
         }
 
+        Dump dumpL;
+        dumpL = new Dump(robot, elementPos);
+
+        //TODO: Move to hub and Dump to proper level
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(REPICK_X, REPICK_Y), Math.toRadians(REPICK_HEADING))
                         //.forward(-8)
                         .addTrajectory(traj_hub)
+                        .addTemporalMarker(1, ()->robot.runCommand(dumpL))
                         .build()));
-        //TODO: Move to hub and Dump to proper level
-        //robot.runCommand(drivetrain.followTrajectory(traj_hub));
-        Dump dumpL;
-        dumpL = new Dump(robot, elementPos);
-        robot.runCommand(dumpL);
 
         // move to WH and re-pick
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -117,38 +118,47 @@ public class BlueRepick extends LinearOpMode {
                         .build()));
 
         DriveTillIntake driveTillIntake = new DriveTillIntake(robot, robot.mecanumDrive,
-                new Pose2d(0.1,0, Math.toRadians(0)),
-                3);
+                new Pose2d(0.3,0, Math.toRadians(0)),
+                3.5);
         robot.runCommand(driveTillIntake);
+        if(Configuration.intakeFreightIn == true) {
 
-        // TODO: Redump
-        // go out of WH and dump to level 3
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        //.turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .forward(-(WALL_FWD+7))
-                        .build()));
+            // TODO: Redump
+            // go out of WH and dump to level 3
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            //.turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
+                            .strafeLeft(1)
+                            .forward(-(WALL_FWD + 7))
+                            .build()));
 
-        Trajectory traj_hub_repick = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
-                .splineTo(new Vector2d(HUB_X-1, HUB_Y), HUB_HEADING)
-                .build();
-        robot.runCommand(drivetrain.followTrajectory(traj_hub_repick));
+            robot.intake.setTargetPosition(Intake.Positions.LIFT);
+            robot.update();
+            Dump re_dump = new Dump(robot, 3);
+            Trajectory traj_hub_repick = drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
+                    .splineTo(new Vector2d(HUB_X - 4, HUB_Y+3), HUB_HEADING)
+                    .build();
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(REPICK_X, REPICK_Y), Math.toRadians(REPICK_HEADING))
+                            //.forward(-8)
+                            .addTrajectory(traj_hub_repick)
+                            .addTemporalMarker(1.2, () -> robot.runCommand(re_dump))
+                            .build()));
 
-        robot.intake.setTargetPosition(Intake.Positions.LIFT);
-        robot.update();
-        Dump re_dump = new Dump(robot, 3);
-        robot.runCommand( re_dump);
 
-        // go back to WH
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        //.forward(5)
-                        //.turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
-                        .splineTo(new Vector2d(WALL_X, WALL_Y), Math.toRadians(WALL_HEADING))
-                        //.strafeLeft(6)
-                        .forward(WALL_FWD+10)
-                        .build()));
+            //robot.runCommand( re_dump);
 
+            // go back to WH
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            //.forward(5)
+                            //.turn(Math.toRadians(FINAL_HEADING - drivetrain.getPoseEstimate().getHeading()))
+                            .splineTo(new Vector2d(WALL_X, WALL_Y), Math.toRadians(WALL_HEADING))
+                            .strafeLeft(9)
+                            .forward(WALL_FWD + 28)
+                            .build()));
+        }
 
 
         od.close();

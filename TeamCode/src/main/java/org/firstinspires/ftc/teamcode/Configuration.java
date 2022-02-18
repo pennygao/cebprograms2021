@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 public class Configuration {
-    public static final double INTAKE_ANGLE_DOWN = -120.0;
+
+    public static final double INTAKE_ANGLE_DOWN = -112.0;
     public static final double INTAKE_ANGLE_DUMP = 13; //13;//-5.0
     public static final double INTAKE_ANGLE_LIFT = 3 ;
     public static final double INTAKE_ANGLE_RESET = 0.0;
@@ -27,4 +28,7 @@ public class Configuration {
     public static final double CLAW_OPEN = 0.25;
     public static final double ARMJOINT_GRAB = 0.35;
     public static final double ARMJOINT_CAP = 0.05;
+
+    // intake state
+    public static boolean intakeFreightIn = false;
 }

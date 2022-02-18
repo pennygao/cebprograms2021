@@ -36,6 +36,7 @@ public class TfodTSE extends TfodBase {
     public TfodTSE() {
         //super(TFOD_MODEL_ASSET, LABELS, IS_MODEL_TENSOR_FLOW_2);
         super(null, LABELS, IS_MODEL_TENSOR_FLOW_2);
+        // P-TSE setModelFromFile("/storage/emulated/0/FIRST/tflitemodels/purpleTSE_20220213_210831.tflite", LABELS);
         setModelFromFile( "/storage/emulated/0/FIRST/tflitemodels/model_20220117_133234.tflite", LABELS);
     }
 }

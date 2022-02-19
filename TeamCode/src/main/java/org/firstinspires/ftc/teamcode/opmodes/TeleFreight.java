@@ -18,6 +18,7 @@ public class  TeleFreight  extends LinearOpMode {
     //Green = slow mode, red = fast mode
     private LED SpeedLEDRed;
     private LED SpeedLEDGreen;
+    private double intakeDownAngle = Configuration.INTAKE_ANGLE_DOWN;
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this);
@@ -83,6 +84,19 @@ public class  TeleFreight  extends LinearOpMode {
 
 
 //INTAKE
+
+            //lower intake
+            if (robot.userInput.buttonPressed(2, "left_bumper")){
+                intakeDownAngle -= 3;
+                Log.i("intake angle", "down, " + intakeDownAngle);
+            }
+            if (robot.userInput.buttonPressed(2, "right_bumper")){
+                intakeDownAngle += 3;
+                Log.i("intake angle", "up, " + intakeDownAngle);
+            }
+            telemetry.addLine("intake down angle: " + intakeDownAngle);
+            Log.i("intake angle", "angle, " + intakeDownAngle);
+
             if(robot.intake.checkFreightIn()){
                 robot.intake.stop();
                 slowMode = false;
@@ -96,9 +110,10 @@ public class  TeleFreight  extends LinearOpMode {
                 }
                 else intakeMode++;
                 if (intakeMode == 1){// start intake
-                    robot.intake.start();
+                    robot.intake.teleStart(intakeDownAngle);
                     slowMode = true;
                     telemetry.addLine("in buttonX loop " + intakeMode);
+
                 }
                 if (intakeMode == 2 ){ // stop intake
                     robot.intake.stop();
@@ -233,6 +248,7 @@ public class  TeleFreight  extends LinearOpMode {
             }
 
             Log.i("armClaw", "armposition: " + robot.arm.getarmPosition());
+
         }
     }
 }

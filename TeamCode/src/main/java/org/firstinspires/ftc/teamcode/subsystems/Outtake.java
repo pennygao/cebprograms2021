@@ -98,11 +98,11 @@ public class Outtake implements Subsystem {
             LevelLEDGreen.enableLight(false);}
         else if(defaultLevel==1){
             defaultLevel++;
-            LevelLEDRed.enableLight(false);
+            LevelLEDRed.enableLight(true);
             LevelLEDGreen.enableLight(true);}
         else if(defaultLevel==2){
             defaultLevel++;
-            LevelLEDRed.enableLight(true);
+            LevelLEDRed.enableLight(false);
             LevelLEDGreen.enableLight(true);
         }
     }

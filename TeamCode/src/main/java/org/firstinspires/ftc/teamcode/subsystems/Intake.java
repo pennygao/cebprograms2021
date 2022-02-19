@@ -70,6 +70,12 @@ public class Intake implements Subsystem {
         Log.i("intake", targetReached() +
                 " " + getArmAngle() + " " + armMotor.getCurrentPosition());
     }
+    public void teleStart(double downAngle) {
+        setTargetAngle(downAngle * Math.PI / 180);
+        sweepMotor.setPower(sweepPower);
+        Log.i("intake", targetReached() +
+                " " + getArmAngle() + " " + armMotor.getCurrentPosition());
+    }
     public void stop() {
         setTargetPosition(Positions.DUMP);
         sweepMotor.setPower(1.4);

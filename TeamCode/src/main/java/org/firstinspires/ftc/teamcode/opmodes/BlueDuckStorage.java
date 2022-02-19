@@ -39,8 +39,8 @@ public class BlueDuckStorage extends LinearOpMode {
     public static double DUCK_BUF = 12;
     public static double HUB_X= -28; //-20.1 ;
     public static double HUB_Y= -7; //0.5
-    public static double HUB_2X=-28;
-    public static double HUB_2Y= -7;
+    public static double HUB_2X=-27.5;
+    public static double HUB_2Y= -6.5;
     public static double HUB_1X= -26; //-21;
     public static double HUB_1Y= -7; //1.5; //-25.87;
     public static double HUB_HEADING= Math.toRadians(140+80);; //1.14;
@@ -112,9 +112,6 @@ public class BlueDuckStorage extends LinearOpMode {
         robot.intake.setTargetPosition(Intake.Positions.LIFT);
         robot.update();
         Dump dumpL = new Dump(robot, elementPos);
-
-        robot.runCommand(drivetrain.followTrajectory(traj_hub));
-        robot.runCommand(dumpL);
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())

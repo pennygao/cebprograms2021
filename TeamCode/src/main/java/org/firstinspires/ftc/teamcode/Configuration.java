@@ -2,14 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 public class Configuration {
 
-    public static final double INTAKE_ANGLE_DOWN = -112.0;
+    public static final double INTAKE_ANGLE_DOWN = -117.0;
     public static final double INTAKE_ANGLE_DUMP = 13; //13;//-5.0
     public static final double INTAKE_ANGLE_LIFT = 3 ;
     public static final double INTAKE_ANGLE_RESET = 0.0;
 
+
     public static final double SLIDER_FIRST_HEIGHT_INCHES = 4.0;
     public static final double SLIDER_SECOND_HEIGHT_INCHES = 6.5;
-    public static final double SLIDER_THIRD_HEIGHT_INCHES = 14;
+    public static final double SLIDER_THIRD_HEIGHT_INCHES = 14.5;
 
     public static final double SLIDER_ACCEPTABLE_ERROR_TICKS = 14;
 

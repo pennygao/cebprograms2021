@@ -38,7 +38,7 @@ public class RedRepick extends LinearOpMode {
     public static double DUCK_X = -5.7;
     public static double DUCK_Y = 22.5;
     public static double DUCK_BUF = 2.0;
-    public static double HUB_X= -26; //-21;
+    public static double HUB_X= -28; //-21;
     public static double HUB_Y= -9; //1.5; //-25.87;
     public static double HUB_1X= -26.5; //-21;
     public static double HUB_1Y= -9; //1.5; //-25.87;

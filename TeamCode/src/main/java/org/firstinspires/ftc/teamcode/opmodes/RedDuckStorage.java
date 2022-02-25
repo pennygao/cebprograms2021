@@ -35,10 +35,10 @@ public class RedDuckStorage extends LinearOpMode {
     public static double SCAN_RIGHT = 10;
     public static double DUCK_X = -5; //-2.93-
     public static double DUCK_Y = -15;//-11.9;
-    public static double DUCK_HEADING = -Math.toRadians(70); // degree//305
-    public static double DUCK_BUF = 16;
-    public static double HUB_X= -26.8; //-21;
-    public static double HUB_Y= 19.8; //1.5; //-25.87;
+    public static double DUCK_HEADING = -Math.toRadians(75); // degree//305
+    public static double DUCK_BUF = 18;
+    public static double HUB_X= -26; //-21;
+    public static double HUB_Y= 19; //1.5; //-25.87;
     public static double HUB_1X= -25.5;//-18.41; //-21;
     public static double HUB_1Y= 18.5;//12.43; //1.5; //-25.87;
     public static double HUB_HEADING= Math.PI + Math.toRadians(-35); //1.14; //310
@@ -81,7 +81,7 @@ public class RedDuckStorage extends LinearOpMode {
                         .build()
         ));
 
-        double spinPower = -0.5;
+        double spinPower = -0.4;
         driveTime = 3;
         Spin spinDuck = new Spin(robot.spinner,spinPower, driveTime);
         robot.runCommands(spinDuck);

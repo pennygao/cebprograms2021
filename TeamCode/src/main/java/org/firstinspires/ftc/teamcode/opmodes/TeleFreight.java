@@ -178,7 +178,7 @@ public class  TeleFreight  extends LinearOpMode {
                 save currentTime
             */
             gamepadDuckPower = gamepad1.right_trigger - gamepad1.left_trigger;
-            robot.spinner.setPower(gamepadDuckPower*0.8);
+            robot.spinner.setPower(gamepadDuckPower*0.7);
             Log.i("duckSpinner", "gamepad power: "+gamepadDuckPower);
             telemetry.update();
 

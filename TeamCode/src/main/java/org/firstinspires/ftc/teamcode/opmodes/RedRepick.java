@@ -49,7 +49,7 @@ public class RedRepick extends LinearOpMode {
     public static double WAREHOUSE_X = -1;
     public static double WAREHOUSE_Y = 24;
     public static double WAREHOUSE_HEADING = 90;
-    public static double WALL_FWD = 24 ;
+    public static double WALL_FWD = 26 ;
     public static double HUB_X_RD= -27; //-21;
     public static double HUB_Y_RD= 12; //1.5; //-25.87;
     public static double HUB_HEADING_RD= Math.PI + 5.0; //5.7  //1.14;
@@ -157,8 +157,8 @@ public class RedRepick extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             .splineTo(new Vector2d(WALL_X, WALL_Y), Math.toRadians(WALL_HEADING))
-                            .strafeRight(6)
-                            //.splineTo(new Vector2d(WAREHOUSE_X,WAREHOUSE_Y+10),WAREHOUSE_HEADING)
+                            .strafeRight(9)
+                             //.splineTo(new Vector2d(WAREHOUSE_X,WAREHOUSE_Y+10),WAREHOUSE_HEADING)
                             .forward(WALL_FWD + 20)
                             .build()));
         }

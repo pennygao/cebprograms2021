@@ -113,7 +113,7 @@ public class BlueRepick extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.forward(2)
                          .splineTo(new Vector2d(WALL_X, WALL_Y), Math.toRadians(WALL_HEADING))
-                        .strafeLeft(5)
+                        .strafeLeft(9)
                         .forward(WALL_FWD)
                         .build()));
 
